@@ -1,0 +1,3061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amadeus Selling Platform Connect</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   AMADEUS SELLING PLATFORM — AUTHENTIC TERMINAL SIMULATOR
+   ═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #062d2a;
+  --bg-mid:    #083330;
+  --bg-dark:   #041e1c;
+  --text:      #e8e8e8;
+  --orange:    #e8881a;
+  --amber:     #ffae42;
+  --cyan:      #00d9d9;
+  --yellow:    #f5f014;
+  --green:     #4de64d;
+  --red:       #ff4f4f;
+  --pink:      #ff77ff;
+  --dim:       #4a8a80;
+  --dim2:      #2d5f58;
+  --white:     #ffffff;
+  --border:    #0d4d47;
+  --font:      'Courier New', Courier, monospace;
+  --nav-bg:    #003a7d;
+  --nav-text:  #ccddf9;
+  --toolbar-bg:#f0f2f5;
+  --btn-bg:    #e4e7eb;
+  --btn-border:#b0b8c4;
+  --crumb-bg:  #d8dce2;
+  --crumb-text:#2c3e50;
+  --status-bg: #1a2830;
+  --status-txt:#7aa8b8;
+}
+
+html, body { height: 100%; overflow: hidden; background: var(--bg); font-size: 13px; }
+
+#app {
+  display: flex; flex-direction: column; height: 100vh;
+  font-family: var(--font);
+}
+
+/* ── TOP NAVIGATION BAR ──────────────────────────────────────────────── */
+#nav {
+  background: var(--nav-bg);
+  display: flex; align-items: center;
+  height: 28px; flex-shrink: 0;
+  border-bottom: 1px solid #00286a;
+  user-select: none;
+}
+#logo {
+  padding: 0 14px;
+  font-family: Arial, sans-serif;
+  font-size: 16px; font-weight: 700; font-style: italic;
+  color: #6db3f2; letter-spacing: 1px;
+  border-right: 1px solid #00286a;
+  height: 100%; display: flex; align-items: center;
+  min-width: 130px;
+}
+.nav-menu {
+  display: flex; height: 100%;
+}
+.nav-item {
+  padding: 0 12px; color: var(--nav-text);
+  font-family: Arial, sans-serif; font-size: 12px;
+  display: flex; align-items: center; cursor: pointer;
+  border-right: 1px solid #002875;
+}
+.nav-item:hover { background: #004faa; color: #fff; }
+#nav-search {
+  margin-left: auto; display: flex; align-items: center;
+  padding: 0 10px; gap: 6px;
+  color: #8ab4dc; font-family: Arial, sans-serif; font-size: 11px;
+}
+#nav-search svg { width: 13px; height: 13px; }
+
+/* ── ACTION TOOLBAR ──────────────────────────────────────────────────── */
+#toolbar {
+  background: var(--toolbar-bg);
+  border-bottom: 2px solid #b8c0cc;
+  display: flex; align-items: center;
+  height: 38px; flex-shrink: 0;
+  padding: 0 8px; gap: 4px;
+  user-select: none;
+}
+.tb-btn {
+  background: var(--btn-bg); border: 1px solid var(--btn-border);
+  border-radius: 3px; padding: 3px 10px;
+  font-family: Arial, sans-serif; font-size: 11px;
+  color: #2c3e50; cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+}
+.tb-btn:hover { background: #d6dbe3; }
+.tb-btn svg { width: 12px; height: 12px; color: #4a6fa5; }
+.tb-sep { width: 1px; height: 24px; background: var(--btn-border); margin: 0 4px; }
+#retrieve-bar {
+  display: flex; align-items: center; border: 1px solid var(--btn-border);
+  background: #fff; border-radius: 3px; height: 26px; overflow: hidden;
+  margin-left: 4px;
+}
+#retrieve-input {
+  border: none; outline: none; padding: 0 6px;
+  font-family: Arial, sans-serif; font-size: 11px;
+  color: #2c3e50; width: 200px; background: transparent;
+}
+.rt-btn {
+  background: #003a7d; color: #fff;
+  border: none; padding: 0 10px; height: 100%;
+  font-family: Arial, sans-serif; font-size: 11px;
+  cursor: pointer; white-space: nowrap;
+}
+.rt-btn.adv { background: #e4e7eb; color: #2c3e50; border-left: 1px solid var(--btn-border); }
+.rt-btn:hover { filter: brightness(1.1); }
+#cmd-input-bar {
+  display: flex; align-items: center; border: 1px solid var(--btn-border);
+  background: #fff; border-radius: 3px; height: 26px; overflow: hidden;
+  margin-left: 4px; flex: 1; max-width: 260px;
+}
+#cmd-toolbar {
+  border: none; outline: none; padding: 0 6px;
+  font-family: var(--font); font-size: 12px;
+  color: #1a1a1a; width: 100%; background: transparent;
+}
+.lang-select {
+  background: var(--btn-bg); border: 1px solid var(--btn-border);
+  border-radius: 3px; padding: 2px 6px; font-size: 11px;
+  font-family: Arial, sans-serif; color: #2c3e50; cursor: pointer;
+}
+.smart-btn {
+  background: var(--btn-bg); border: 1px solid var(--btn-border);
+  border-radius: 3px; padding: 3px 8px;
+  font-family: Arial, sans-serif; font-size: 11px; color: #2c3e50;
+  cursor: pointer; white-space: nowrap;
+}
+.covid-btn {
+  margin-left: auto; display: flex; align-items: center; gap: 4px;
+  font-family: Arial, sans-serif; font-size: 11px;
+  color: #003a7d; cursor: pointer; padding: 0 6px;
+}
+
+/* ── BREADCRUMB / TITLE BAR ──────────────────────────────────────────── */
+#breadcrumb {
+  background: var(--crumb-bg); border-bottom: 2px solid #b8c0cc;
+  padding: 4px 12px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px;
+  font-family: Arial, sans-serif; font-size: 12px; color: var(--crumb-text);
+  user-select: none;
+}
+#breadcrumb svg { width: 14px; height: 14px; color: #4a6fa5; }
+#bc-text { color: #1a3a6b; font-weight: 600; }
+
+/* ── PANEL TABS (top, below breadcrumb) ─────────────────────────────── */
+#ptabs {
+  background: #e0e4ea; border-bottom: 1px solid #b8c0cc;
+  display: flex; flex-shrink: 0; user-select: none;
+}
+.ptab {
+  padding: 4px 16px; font-family: Arial, sans-serif; font-size: 11px;
+  color: #4a6070; cursor: pointer; border-right: 1px solid #b8c0cc;
+  white-space: nowrap;
+}
+.ptab:hover { background: #d0d4da; color: #1a2a40; }
+.ptab.active {
+  background: #073b39; color: #e8e8e8;
+  border-bottom: 2px solid var(--amber);
+}
+.ptab-key { color: #7aaad0; margin-right: 4px; font-size: 10px; }
+
+/* ── MAIN CONTENT AREA ───────────────────────────────────────────────── */
+#main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+.view { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.view.active { display: flex; }
+
+/* ── TERMINAL OUTPUT ─────────────────────────────────────────────────── */
+#output {
+  flex: 1; overflow-y: auto; padding: 5px 14px 4px;
+  background: var(--bg); font-family: var(--font);
+  font-size: 13.5px; line-height: 1.38;
+  scrollbar-width: thin; scrollbar-color: #0d5050 var(--bg);
+}
+#output::-webkit-scrollbar { width: 7px; }
+#output::-webkit-scrollbar-track { background: var(--bg-dark); }
+#output::-webkit-scrollbar-thumb { background: #0d5050; border-radius: 4px; }
+
+.ln  { display: block; white-space: pre; font-family: var(--font); }
+.w   { color: var(--white); }
+.o   { color: var(--orange); }
+.am  { color: var(--amber); }
+.c   { color: var(--cyan); }
+.y   { color: var(--yellow); }
+.g   { color: var(--green); }
+.r   { color: var(--red); }
+.p   { color: var(--pink); }
+.d   { color: var(--dim); }
+.d2  { color: var(--dim2); }
+.cmd-echo { color: #b0e0d8; }
+
+/* ── COMMAND INPUT ROW ───────────────────────────────────────────────── */
+#inputrow {
+  background: var(--bg-dark);
+  padding: 0; display: flex; align-items: stretch;
+  flex-shrink: 0; border-top: 1px solid var(--border);
+}
+#prompt-sym {
+  color: var(--amber); font-family: var(--font); font-size: 14px;
+  padding: 5px 6px 5px 12px; background: var(--bg-dark);
+  border-right: 1px solid var(--border); flex-shrink: 0;
+  line-height: 1.6;
+}
+#cmd {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--white); font-family: var(--font); font-size: 13.5px;
+  caret-color: var(--amber); letter-spacing: 0.3px;
+  padding: 5px 8px;
+}
+.ibtn {
+  background: #0a4040; border: none; border-left: 1px solid var(--border);
+  color: var(--dim); font-family: var(--font); font-size: 11px;
+  padding: 0 12px; cursor: pointer; letter-spacing: 1px;
+}
+.ibtn:hover { background: #0d5555; color: var(--text); }
+
+/* ── SPLIT TOGGLE BUTTONS ─────────────────────────────────────────── */
+#split-toggle-area {
+  display: flex; align-items: center; margin-left: auto; gap: 4px; padding: 0 8px;
+}
+.split-tog-btn {
+  background: var(--btn-bg); border: 1px solid var(--btn-border);
+  border-radius: 3px; padding: 2px 8px; font-size: 11px;
+  font-family: Arial, sans-serif; color: #2c3e50; cursor: pointer;
+  white-space: nowrap;
+}
+.split-tog-btn:hover { background: #c8d0d8; }
+.split-tog-btn.active { background: #073b39; color: var(--amber); border-color: var(--amber); }
+
+/* ── TST / TQT VIEW ─────────────────────────────────────────────────── */
+#tst-view {
+  flex: 1; overflow-y: auto; padding: 10px 14px;
+  background: var(--bg); font-family: var(--font); font-size: 13.5px;
+}
+.tst-hdr { color: var(--amber); letter-spacing: 1px; margin-bottom: 6px; }
+.tst-block {
+  border: 1px solid var(--border); margin-bottom: 12px; padding: 8px 12px;
+  background: var(--bg-dark);
+}
+.tst-row { display: flex; gap: 6px; padding: 1px 0; }
+.tst-lbl { color: var(--dim); min-width: 180px; }
+.tst-val { color: var(--white); }
+
+/* ── PNR LIST VIEW ───────────────────────────────────────────────────── */
+#pnr-view { flex: 1; overflow-y: auto; padding: 10px 12px; background: var(--bg); }
+.list-title {
+  color: var(--cyan); font-size: 11px; letter-spacing: 1px; margin-bottom: 8px;
+  padding-bottom: 4px; border-bottom: 1px solid var(--border);
+}
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th {
+  background: #041e1c; color: var(--cyan); padding: 3px 10px;
+  text-align: left; border: 1px solid var(--border);
+  font-weight: normal; font-size: 11.5px; letter-spacing: 0.5px;
+}
+td { padding: 2px 10px; border: 1px solid #0d3535; color: var(--text); font-family: var(--font); cursor: pointer; }
+tr:hover td { background: #0a4040; }
+
+/* ── HELP VIEW ───────────────────────────────────────────────────────── */
+#help-view {
+  flex: 1; overflow-y: auto; padding: 12px 16px;
+  background: var(--bg); scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--bg);
+  column-count: 2; column-gap: 24px;
+}
+.hs { margin-bottom: 14px; break-inside: avoid; }
+.hs h3 {
+  color: var(--amber); font-size: 10.5px; letter-spacing: 2px;
+  margin-bottom: 5px; padding-bottom: 3px;
+  border-bottom: 1px solid var(--border);
+}
+.hr { display: flex; gap: 14px; padding: 1px 0; }
+.hc { color: var(--yellow); min-width: 220px; font-size: 12px; }
+.hd { color: var(--dim); font-size: 12px; }
+
+/* ── SPLIT SCREEN ────────────────────────────────────────────────────── */
+#split-wrapper {
+  display: flex; flex: 1; overflow: hidden;
+}
+#split-left, #split-right {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+#split-left { border-right: 3px solid var(--amber); }
+.split-label {
+  background: #0a3830; color: var(--amber); font-family: var(--font);
+  font-size: 11px; padding: 2px 8px; letter-spacing: 1px; flex-shrink: 0;
+  border-bottom: 1px solid var(--border); text-align: center;
+}
+.split-output {
+  flex: 1; overflow-y: auto; padding: 5px 14px 4px;
+  background: var(--bg); font-family: var(--font);
+  font-size: 13.5px; line-height: 1.38;
+  scrollbar-width: thin; scrollbar-color: #0d5050 var(--bg);
+}
+.split-output::-webkit-scrollbar { width: 7px; }
+.split-output::-webkit-scrollbar-track { background: var(--bg-dark); }
+.split-output::-webkit-scrollbar-thumb { background: #0d5050; border-radius: 4px; }
+#split-compare-bar {
+  background: #041e1c; border-top: 1px solid var(--border);
+  color: var(--dim); font-family: var(--font); font-size: 11.5px;
+  padding: 3px 12px; letter-spacing: 0.5px; flex-shrink: 0;
+  display: none;
+}
+#split-compare-bar span { color: var(--amber); }
+
+/* ── INLINE CURSOR LINE ───────────────────────────────────────────────── */
+#inline-input-line {
+  display: flex; align-items: baseline; padding: 1px 0;
+  font-family: var(--font); font-size: 13.5px; line-height: 1.38;
+}
+#inline-prompt { color: var(--white); padding-right: 4px; }
+#inline-cursor {
+  display: inline-block; width: 8px; height: 14px;
+  background: var(--amber); vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+#inline-typed { color: var(--white); font-family: var(--font); font-size: 13.5px; }
+
+/* ── TWD VIEW ─────────────────────────────────────────────────────────── */
+#twd-view {
+  flex: 1; overflow-y: auto; padding: 10px 14px;
+  background: var(--bg); font-family: var(--font); font-size: 13.5px;
+}
+
+/* ── FARE RULES VIEW ─────────────────────────────────────────────────── */
+#fqn-view {
+  flex: 1; overflow-y: auto; padding: 10px 14px;
+  background: var(--bg); font-family: var(--font); font-size: 13.5px;
+}
+#fqn-nav {
+  display: flex; gap: 8px; margin-bottom: 8px; flex-shrink: 0;
+  padding: 4px 14px; background: var(--bg-dark); border-bottom: 1px solid var(--border);
+}
+.fqn-btn {
+  background: #0a4040; border: 1px solid var(--border); color: var(--dim);
+  font-family: var(--font); font-size: 11px; padding: 2px 10px; cursor: pointer;
+  border-radius: 2px;
+}
+.fqn-btn:hover { background: #0d5555; color: var(--text); }
+#fqn-page-info { color: var(--dim); font-size: 11px; margin-left: auto; }
+
+/* ── STATUS BAR ─────────────────────────────────────────────────────── */
+#statusbar {
+  background: var(--status-bg); border-top: 1px solid #0f2030;
+  padding: 2px 12px; display: flex; align-items: center; gap: 16px;
+  flex-shrink: 0; font-family: Arial, sans-serif; font-size: 11px;
+  color: var(--status-txt); user-select: none;
+}
+.sb-sep { width: 1px; height: 12px; background: #2a4a5a; }
+#sb-pnr { color: var(--amber); font-family: var(--font); font-weight: bold; }
+.sb-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+.sb-db-ok  { color: var(--green); }
+.sb-db-err { color: var(--red); }
+
+/* ── BOTTOM PAGE TABS ────────────────────────────────────────────────── */
+#bottomtabs {
+  background: #1a2830; border-top: 1px solid #0f2030;
+  display: flex; flex-shrink: 0; user-select: none;
+  min-height: 24px;
+}
+.btab {
+  padding: 3px 14px; font-family: Arial, sans-serif; font-size: 11px;
+  color: #5a8090; cursor: pointer; border-right: 1px solid #0f2030;
+  display: flex; align-items: center; gap: 6px;
+}
+.btab:hover { color: #8ab0c0; background: #1e3040; }
+.btab.active { color: #c8e0ea; background: #073b39; border-top: 2px solid var(--amber); }
+.btab svg { width: 11px; height: 11px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ TOP NAVIGATION BAR ══════════════════════════════════════════ -->
+  <div id="nav">
+    <div id="logo">amadeus</div>
+    <div class="nav-menu">
+      <div class="nav-item">File</div>
+      <div class="nav-item">Go To</div>
+      <div class="nav-item">Settings</div>
+      <div class="nav-item">Scripts</div>
+      <div class="nav-item">About</div>
+    </div>
+    <div id="nav-search">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.44 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
+      Search solutions, learning and support
+    </div>
+  </div>
+
+  <!-- ══ ACTION TOOLBAR ══════════════════════════════════════════════ -->
+  <div id="toolbar">
+    <button class="tb-btn" onclick="doNewBooking()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/></svg>
+      New booking file ▾
+    </button>
+    <button class="tb-btn" onclick="doNewPage()">New command page</button>
+    <button class="tb-btn">New Traveler Profile</button>
+    <div class="tb-sep"></div>
+    <div id="retrieve-bar">
+      <input id="retrieve-input" type="text" placeholder="Retrieve booking file by name, re..." spellcheck="false"
+             onkeydown="if(event.key==='Enter'){doRetrieve();}">
+      <button class="rt-btn" onclick="doRetrieve()">Retrieve</button>
+      <button class="rt-btn adv">Advanced</button>
+    </div>
+    <div id="cmd-input-bar">
+      <input id="cmd-toolbar" type="text" placeholder="Enter GDS Commands, for example: AN..." spellcheck="false"
+             onkeydown="if(event.key==='Enter'){doToolbarCmd();}">
+    </div>
+    <select class="lang-select"><option>Amadeus</option></select>
+    <div class="tb-sep"></div>
+    <div class="smart-btn">Your Smart Flows ▾</div>
+    <div class="covid-btn">🛡 COVID-19</div>
+    <div class="tb-sep"></div>
+    <div id="split-toggle-area">
+      <span style="font-family:Arial;font-size:11px;color:#4a6070;margin-right:2px">Screen:</span>
+      <button class="split-tog-btn active" id="btn-single" onclick="cmdSplit(false)" title="Single screen">⬜ Single</button>
+      <button class="split-tog-btn" id="btn-split" onclick="cmdSplit(true)" title="Split screen for reissue comparison">⬛⬛ Split</button>
+    </div>
+  </div><!-- /#toolbar -->
+
+  <!-- ══ BREADCRUMB ═══════════════════════════════════════════════════ -->
+  <div id="breadcrumb">
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
+    <span id="bc-text">Command page</span>
+    <span id="bc-pnr" style="color:#4a6070;font-weight:normal;"></span>
+  </div>
+
+  <!-- ══ VIEW TABS ════════════════════════════════════════════════════ -->
+  <div id="ptabs">
+    <div class="ptab active" id="ptab-terminal" onclick="switchView('terminal')">
+      <span class="ptab-key">F1</span>COMMAND PAGE
+    </div>
+    <div class="ptab" id="ptab-tst" onclick="switchView('tst')">
+      <span class="ptab-key">F2</span>TST / TQT
+    </div>
+    <div class="ptab" id="ptab-pnr" onclick="switchView('pnr')">
+      <span class="ptab-key">F3</span>PNR DATABASE
+    </div>
+    <div class="ptab" id="ptab-twd" onclick="switchView('twd')">
+      <span class="ptab-key">F5</span>TWD
+    </div>
+    <div class="ptab" id="ptab-fqn" onclick="switchView('fqn')">
+      <span class="ptab-key">F6</span>FARE RULES
+    </div>
+    <div class="ptab" id="ptab-help" onclick="switchView('help')">
+      <span class="ptab-key">F4</span>HELP
+    </div>
+  </div>
+
+  <!-- ══ MAIN ═════════════════════════════════════════════════════════ -->
+  <div id="main">
+
+    <!-- COMMAND PAGE VIEW (with split screen support) -->
+    <div id="view-terminal" class="view active">
+      <div id="split-wrapper">
+        <!-- Left pane (old ticket in split mode, full terminal in normal mode) -->
+        <div id="split-left">
+          <div class="split-label" id="split-left-label" style="display:none">◀ ORIGINAL TICKET</div>
+          <div id="output" class="split-output"></div>
+        </div>
+        <!-- Right pane (only visible in split mode) -->
+        <div id="split-right" style="display:none">
+          <div class="split-label">NEW TST ▶</div>
+          <div id="output-right" class="split-output"></div>
+        </div>
+      </div>
+      <div id="split-compare-bar">
+        OLD: <span id="sc-old">—</span> &nbsp;→&nbsp; NEW: <span id="sc-new">—</span> &nbsp;|&nbsp; ADC: <span id="sc-adc">—</span> &nbsp;|&nbsp; PENALTY: <span id="sc-pen">—</span> &nbsp;|&nbsp; TOTAL: <span id="sc-tot">—</span>
+      </div>
+      <div id="inputrow">
+        <span id="prompt-sym">&gt;</span>
+        <input id="cmd" type="text" autocomplete="off" spellcheck="false" autofocus>
+        <button class="ibtn" onclick="sendCmd()">ENTER</button>
+        <button class="ibtn" onclick="clearScr()">CLR</button>
+        <button class="ibtn" onclick="histBack()">▲</button>
+      </div>
+    </div>
+
+    <!-- TST / TQT VIEW -->
+    <div id="view-tst" class="view">
+      <div id="tst-view">
+        <div class="ln d" style="padding:20px 0;text-align:center">
+          NO TST ON FILE — USE FXP TO CREATE A TRANSITIONAL STORED TICKET
+        </div>
+      </div>
+    </div>
+
+    <!-- PNR DATABASE VIEW -->
+    <div id="view-pnr" class="view">
+      <div id="pnr-view">
+        <div class="list-title">PNR DATABASE — OFFICE CAIMS1234AA</div>
+        <table>
+          <thead>
+            <tr>
+              <th>LOCATOR</th><th>STATUS</th><th>PAX NAME</th>
+              <th>RF</th><th>CREATED</th><th>TTL/TKT DL</th><th>OFFICE</th>
+            </tr>
+          </thead>
+          <tbody id="pnrBody">
+            <tr><td colspan="7" style="color:#0d5050;padding:12px;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TWD VIEW -->
+    <div id="view-twd" class="view">
+      <div id="twd-view">
+        <div class="ln d" style="padding:20px 0;text-align:center">NO E-TICKET ON DISPLAY — USE TWD OR TWD/Ln</div>
+      </div>
+    </div>
+
+    <!-- FARE RULES VIEW -->
+    <div id="view-fqn" class="view">
+      <div id="fqn-nav" style="display:none">
+        <button class="fqn-btn" onclick="fqnPagePrev()">◀ PREV</button>
+        <button class="fqn-btn" onclick="fqnPageNext()">NEXT ▶</button>
+        <button class="fqn-btn" onclick="fqnPageFirst()">FIRST</button>
+        <span id="fqn-page-info"></span>
+      </div>
+      <div id="fqn-view">
+        <div class="ln d" style="padding:20px 0;text-align:center">NO FARE RULES — USE FQN1 OR FQN1*PE</div>
+      </div>
+    </div>
+
+    <!-- HELP VIEW -->
+    <div id="view-help" class="view">
+      <div id="help-view">
+        <div class="hs">
+          <h3>AVAILABILITY</h3>
+          <div class="hr"><span class="hc">AN20MAYCAIDXB</span><span class="hd">Availability Cairo→Dubai 20MAY</span></div>
+          <div class="hr"><span class="hc">AN20MAYCAIDXB/AMS</span><span class="hd">Filter by airline MS</span></div>
+          <div class="hr"><span class="hc">AN15JUNCAILHR</span><span class="hd">Availability Cairo→London</span></div>
+          <div class="hr"><span class="hc">AN10JULCAICDG</span><span class="hd">Availability Cairo→Paris</span></div>
+        </div>
+        <div class="hs">
+          <h3>FARES &amp; PRICING</h3>
+          <div class="hr"><span class="hc">FQDCAIDXB</span><span class="hd">Fare quote Cairo→Dubai</span></div>
+          <div class="hr"><span class="hc">FQDCAILHR/ABA</span><span class="hd">Fares BA only</span></div>
+          <div class="hr"><span class="hc">FXP</span><span class="hd">Price PNR &amp; create TST</span></div>
+          <div class="hr"><span class="hc">FXP/R,VC-EK</span><span class="hd">Price specifying carrier</span></div>
+          <div class="hr"><span class="hc">FXX</span><span class="hd">Price by exception (amend fare)</span></div>
+          <div class="hr"><span class="hc">FXB</span><span class="hd">Price using corporate/negotiated fares</span></div>
+          <div class="hr"><span class="hc">FRD</span><span class="hd">Display fare rules (current fare)</span></div>
+          <div class="hr"><span class="hc">FRD/P2</span><span class="hd">Fare rules for passenger 2</span></div>
+        </div>
+        <div class="hs">
+          <h3>TST — STORED TICKET</h3>
+          <div class="hr"><span class="hc">TQT</span><span class="hd">Display all TSTs (F2 tab)</span></div>
+          <div class="hr"><span class="hc">TQT/T1</span><span class="hd">Display TST number 1</span></div>
+          <div class="hr"><span class="hc">TQT/TS</span><span class="hd">Display TST summary</span></div>
+          <div class="hr"><span class="hc">TWD</span><span class="hd">Ticket waybill display</span></div>
+          <div class="hr"><span class="hc">TDN</span><span class="hd">Delete TST(s)</span></div>
+        </div>
+        <div class="hs">
+          <h3>PNR BUILD — NAMES</h3>
+          <div class="hr"><span class="hc">NM1HASSAN/EMAD MR</span><span class="hd">Add adult passenger</span></div>
+          <div class="hr"><span class="hc">NM1HASSAN/EMAD MR(ADT)</span><span class="hd">Name with explicit PTC</span></div>
+          <div class="hr"><span class="hc">NM2HASSAN/EMAD MR-ALI/SARA MRS</span><span class="hd">Add 2 passengers</span></div>
+          <div class="hr"><span class="hc">NM1JONES/TOM MSTR(CHD)</span><span class="hd">Child passenger</span></div>
+          <div class="hr"><span class="hc">NM1SMITH/BABY INF(INF)</span><span class="hd">Infant (no seat)</span></div>
+        </div>
+        <div class="hs">
+          <h3>PNR BUILD — ELEMENTS</h3>
+          <div class="hr"><span class="hc">SS1Y1</span><span class="hd">Sell 1 seat class Y line 1</span></div>
+          <div class="hr"><span class="hc">SS2B3</span><span class="hd">Sell 2 seats class B line 3</span></div>
+          <div class="hr"><span class="hc">AP 02-24567890</span><span class="hd">Add agency phone</span></div>
+          <div class="hr"><span class="hc">APM +201234567890</span><span class="hd">Add mobile phone</span></div>
+          <div class="hr"><span class="hc">APE test@email.com</span><span class="hd">Add email</span></div>
+          <div class="hr"><span class="hc">RF EMAD HASSAN</span><span class="hd">Received from (mandatory)</span></div>
+          <div class="hr"><span class="hc">ER</span><span class="hd">End &amp; Retrieve (save + display)</span></div>
+          <div class="hr"><span class="hc">ET</span><span class="hd">End transaction (save only)</span></div>
+          <div class="hr"><span class="hc">IGNORE / IG</span><span class="hd">Ignore / discard working PNR</span></div>
+        </div>
+        <div class="hs">
+          <h3>PNR DISPLAY &amp; RETRIEVE</h3>
+          <div class="hr"><span class="hc">RT ABCD12</span><span class="hd">Retrieve PNR by locator</span></div>
+          <div class="hr"><span class="hc">RT HASSAN</span><span class="hd">Retrieve by passenger name</span></div>
+          <div class="hr"><span class="hc">*A</span><span class="hd">Display full PNR (all elements)</span></div>
+          <div class="hr"><span class="hc">*I</span><span class="hd">Itinerary segments only</span></div>
+          <div class="hr"><span class="hc">*N</span><span class="hd">Names only</span></div>
+          <div class="hr"><span class="hc">*R</span><span class="hd">Remarks &amp; contacts only</span></div>
+          <div class="hr"><span class="hc">LIST</span><span class="hd">List all PNRs in database</span></div>
+        </div>
+        <div class="hs">
+          <h3>TICKETING</h3>
+          <div class="hr"><span class="hc">TTP</span><span class="hd">Issue e-ticket all passengers</span></div>
+          <div class="hr"><span class="hc">TTP/T1</span><span class="hd">Issue ticket passenger 1 only</span></div>
+          <div class="hr"><span class="hc">TRFU</span><span class="hd">Calculate refund</span></div>
+          <div class="hr"><span class="hc">TRFU/CONFIRM</span><span class="hd">Process refund</span></div>
+        </div>
+        <div class="hs">
+          <h3>CHANGES &amp; CANCELLATIONS</h3>
+          <div class="hr"><span class="hc">XK1</span><span class="hd">Cancel segment 1</span></div>
+          <div class="hr"><span class="hc">XI</span><span class="hd">Cancel all segments</span></div>
+          <div class="hr"><span class="hc">XE2</span><span class="hd">Delete element 2</span></div>
+        </div>
+        <div class="hs">
+          <h3>SSR / OSI / REMARKS</h3>
+          <div class="hr"><span class="hc">SR WCHR/P1</span><span class="hd">Wheelchair — passenger 1</span></div>
+          <div class="hr"><span class="hc">SR WCHR/P1/S2</span><span class="hd">Wheelchair — pax 1, segment 2</span></div>
+          <div class="hr"><span class="hc">SR VGML/P1</span><span class="hd">Vegetarian meal</span></div>
+          <div class="hr"><span class="hc">SR MOML/P1</span><span class="hd">Moslem meal</span></div>
+          <div class="hr"><span class="hc">SR KSML/P1</span><span class="hd">Kosher meal</span></div>
+          <div class="hr"><span class="hc">SR DBML/P1</span><span class="hd">Diabetic meal</span></div>
+          <div class="hr"><span class="hc">SR DOCS/P1-P/EGY/A1234567/EGY/15JAN80/M/31DEC30/HASSAN/EMAD</span><span class="hd">Passport DOCS (full format)</span></div>
+          <div class="hr"><span class="hc">SR CTCM/P1-20123456789</span><span class="hd">Pax contact mobile</span></div>
+          <div class="hr"><span class="hc">SR CTCE/P1-TEST@EMAIL.COM</span><span class="hd">Pax contact email</span></div>
+          <div class="hr"><span class="hc">OS MS VIP PASSENGER</span><span class="hd">OSI to airline</span></div>
+          <div class="hr"><span class="hc">RM REMARK TEXT</span><span class="hd">Free text general remark</span></div>
+          <div class="hr"><span class="hc">RMZ ACCOUNTING NOTE</span><span class="hd">Accounting remark</span></div>
+        </div>
+        <div class="hs">
+          <h3>E-TICKET DISPLAY (TWD)</h3>
+          <div class="hr"><span class="hc">TWD</span><span class="hd">Display e-ticket (single pax) or list</span></div>
+          <div class="hr"><span class="hc">TWD/1  or  TWD/2</span><span class="hd">Display ticket by number from list</span></div>
+          <div class="hr"><span class="hc">TWD/L6</span><span class="hd">Display ticket at FA element line 6</span></div>
+          <div class="hr"><span class="hc">TWD/TAX</span><span class="hd">Tax breakdown of current e-ticket</span></div>
+          <div class="hr"><span class="hc">TWH</span><span class="hd">Ticket history (coupon changes)</span></div>
+        </div>
+        <div class="hs">
+          <h3>FARE RULES (FQN)</h3>
+          <div class="hr"><span class="hc">FQN1</span><span class="hd">All fare rules for line 1</span></div>
+          <div class="hr"><span class="hc">FQN1*PE</span><span class="hd">Penalties category only</span></div>
+          <div class="hr"><span class="hc">FQN1*AP</span><span class="hd">Advance purchase rules</span></div>
+          <div class="hr"><span class="hc">FQN1*SR</span><span class="hd">Stopovers rules</span></div>
+          <div class="hr"><span class="hc">FQN1*LI</span><span class="hd">List all filed categories</span></div>
+          <div class="hr"><span class="hc">FQN1*CO</span><span class="hd">Combinability rules</span></div>
+          <div class="hr"><span class="hc">MD / MU</span><span class="hd">More down / More up (paginate)</span></div>
+        </div>
+        <div class="hs">
+          <h3>SPLIT SCREEN / REISSUE</h3>
+          <div class="hr"><span class="hc">SPLIT</span><span class="hd">Enable split screen (old vs new TST)</span></div>
+          <div class="hr"><span class="hc">SPLIT/OFF</span><span class="hd">Return to single screen</span></div>
+          <div class="hr"><span class="hc">FXQ</span><span class="hd">Quote fare difference for exchange</span></div>
+          <div class="hr"><span class="hc">TQR</span><span class="hd">Display ATC reissue panel</span></div>
+          <div class="hr"><span class="hc">FHE 077-1234567890</span><span class="hd">Add historical ticket to PNR</span></div>
+          <div class="hr"><span class="hc">TTK/EXCH/T1</span><span class="hd">Set TST 1 to exchange mode</span></div>
+          <div class="hr"><span class="hc">TTK/R500/T6100</span><span class="hd">Set ADC 500 / new total 6100</span></div>
+          <div class="hr"><span class="hc">TTP/EXCH</span><span class="hd">Issue ticket as exchange</span></div>
+          <div class="hr"><span class="hc">TTE</span><span class="hd">Delete all TSTs</span></div>
+          <div class="hr"><span class="hc">TTE/T1</span><span class="hd">Delete TST 1</span></div>
+        </div>
+        <div class="hs">
+          <h3>FORM OF PAYMENT / ENDORSEMENTS</h3>
+          <div class="hr"><span class="hc">FP CASH</span><span class="hd">Form of payment — cash</span></div>
+          <div class="hr"><span class="hc">FP CCVI4111111111111111/1226</span><span class="hd">Credit card (type+number/expiry)</span></div>
+          <div class="hr"><span class="hc">FV MS</span><span class="hd">Validating carrier</span></div>
+          <div class="hr"><span class="hc">FE NONREF/RESTR APPLY</span><span class="hd">Fare endorsement/restriction</span></div>
+          <div class="hr"><span class="hc">FM 5</span><span class="hd">Commission 5%</span></div>
+          <div class="hr"><span class="hc">FPO/CASH+/CASH</span><span class="hd">Old+new FOP for exchange ADC</span></div>
+        </div>
+          <div class="hr"><span class="hc">DNAMS</span><span class="hd">Display airline name — MS</span></div>
+          <div class="hr"><span class="hc">DACCAI</span><span class="hd">Display airport info — CAI</span></div>
+          <div class="hr"><span class="hc">DBSTATS</span><span class="hd">Database statistics</span></div>
+          <div class="hr"><span class="hc">HELP / HE</span><span class="hd">Open this help page (F4)</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#main -->
+
+  <!-- ══ STATUS BAR ════════════════════════════════════════════════════ -->
+  <div id="statusbar">
+    <span>OFFICE: <strong id="sb-office">CAIMS1234AA</strong></span>
+    <div class="sb-sep"></div>
+    <span>SIGN: <strong>AA/SU</strong></span>
+    <div class="sb-sep"></div>
+    <span>PNR: <span id="sb-pnr">--------</span></span>
+    <div class="sb-sep"></div>
+    <span>TTL: <span id="sb-ttl" style="color:#7aa8b8">-</span></span>
+    <div class="sb-right">
+      <span id="sb-chars">0 input</span>
+      <div class="sb-sep"></div>
+      <span id="sb-dt">-</span>
+      <div class="sb-sep"></div>
+      <span>DB: <span id="sb-db" class="sb-db-ok">...</span></span>
+    </div>
+  </div>
+
+  <!-- ══ BOTTOM PAGE TABS ══════════════════════════════════════════════ -->
+  <div id="bottomtabs">
+    <div class="btab active" id="btab-main">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4z"/><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg>
+      Main Page
+    </div>
+    <div class="btab" id="btab-pnr" style="display:none">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>
+      <span id="btab-pnr-name">—</span>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   AMADEUS GDS SIMULATOR — COMMAND ENGINE v2.0
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const SID      = 'S' + Date.now().toString(36).toUpperCase();
+const OFFICE   = 'CAIMS1234AA';
+const MO       = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const DAYS     = ['SU','MO','TU','WE','TH','FR','SA'];
+const TITLES   = ['MSTR','MISS','MRS','MR','MS','DR','PROF','INF'];
+const MEAL_SSR = ['VGML','MOML','KSML','DBML','VLML','CHML','SFML','AVML','HNML','FPML','GLML','LCML','LSML','NLML','RVML','SPML'];
+const SEAT_SSR = ['NSSA','NSSB','NSSW'];
+
+let pnr       = null;   // active working PNR
+let lastAvail = [];     // last AN result cache
+let lastFares = [];     // last FQD result (for FQN)
+let cmdHist   = [];     // command history
+let histIdx   = -1;
+let charCount = 0;
+let splitMode = false;  // split screen active
+let fqnPages  = [];     // paginated fare rules pages
+let fqnCurPage = 0;     // current FQN page index
+
+/* ══ BOOT ═══════════════════════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  tick();
+  setInterval(tick, 1000);
+  ping();
+  setInterval(ping, 30000);
+  boot();
+  const c = document.getElementById('cmd');
+  c.focus();
+  c.addEventListener('keydown', onKey);
+  c.addEventListener('input', () => {
+    charCount = c.value.length;
+    document.getElementById('sb-chars').textContent = charCount + ' input';
+  });
+});
+
+function tick() {
+  const n = new Date();
+  document.getElementById('sb-dt').textContent =
+    `${pad(n.getDate())}${MO[n.getMonth()]}${n.getFullYear()} ${pad(n.getHours())}${pad(n.getMinutes())}Z`;
+}
+
+async function ping() {
+  try {
+    const d = await fetch('/api/health').then(r => r.json());
+    const el = document.getElementById('sb-db');
+    el.textContent = d.ok ? 'ONLINE' : 'ERR';
+    el.className   = d.ok ? 'sb-db-ok' : 'sb-db-err';
+  } catch {
+    const el = document.getElementById('sb-db');
+    el.textContent = 'ERR'; el.className = 'sb-db-err';
+  }
+}
+
+function boot() {
+  const n = new Date();
+  out('am', 'AMADEUS SELLING PLATFORM CONNECT');
+  out('d2', '─'.repeat(64));
+  out('w',  `SIGN IN  AA/SU    OFFICE ${OFFICE}    ${pad(n.getDate())}${MO[n.getMonth()]}${n.getFullYear()} ${pad(n.getHours())}${pad(n.getMinutes())}Z`);
+  out('d2', '─'.repeat(64));
+  nl();
+  out('d', 'ENTER HELP OR PRESS F4 FOR COMMAND REFERENCE');
+  nl();
+}
+
+/* ══ ROUTING ════════════════════════════════════════════════════════════ */
+function doRetrieve() {
+  const v = document.getElementById('retrieve-input').value.trim();
+  if (!v) return;
+  document.getElementById('retrieve-input').value = '';
+  focusCmd();
+  dispatchText('RT ' + v.toUpperCase());
+}
+function doToolbarCmd() {
+  const v = document.getElementById('cmd-toolbar').value.trim();
+  if (!v) return;
+  document.getElementById('cmd-toolbar').value = '';
+  focusCmd();
+  dispatchText(v.toUpperCase());
+}
+function doNewBooking() { cmdIgnore(true); focusCmd(); }
+function doNewPage()    { clearScr(); focusCmd(); }
+function focusCmd()     { switchView('terminal'); document.getElementById('cmd').focus(); }
+
+/* ══ VIEW SWITCHING ═════════════════════════════════════════════════════ */
+function switchView(name) {
+  ['terminal','tst','pnr','twd','fqn','help'].forEach(v => {
+    const view = document.getElementById('view-' + v);
+    const tab  = document.getElementById('ptab-' + v);
+    if (view) view.classList.toggle('active', v === name);
+    if (tab)  tab.classList.toggle('active', v === name);
+  });
+  if (name === 'pnr')      loadPnrPanel();
+  if (name === 'terminal') document.getElementById('cmd').focus();
+}
+
+/* ══ KEY HANDLING ═══════════════════════════════════════════════════════ */
+function onKey(e) {
+  if (e.key === 'Enter')     { sendCmd(); return; }
+  if (e.key === 'ArrowUp')   {
+    e.preventDefault();
+    if (histIdx < cmdHist.length - 1) {
+      histIdx++;
+      document.getElementById('cmd').value = cmdHist[cmdHist.length - 1 - histIdx] || '';
+    }
+    return;
+  }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (histIdx > 0) { histIdx--; document.getElementById('cmd').value = cmdHist[cmdHist.length - 1 - histIdx] || ''; }
+    else             { histIdx = -1; document.getElementById('cmd').value = ''; }
+    return;
+  }
+  if (e.key === 'F1') { e.preventDefault(); switchView('terminal'); }
+  if (e.key === 'F2') { e.preventDefault(); switchView('tst'); }
+  if (e.key === 'F3') { e.preventDefault(); switchView('pnr'); }
+  if (e.key === 'F4') { e.preventDefault(); switchView('help'); }
+  if (e.key === 'F5') { e.preventDefault(); switchView('twd'); }
+  if (e.key === 'F6') { e.preventDefault(); switchView('fqn'); }
+}
+function histBack() {
+  if (histIdx < cmdHist.length - 1) {
+    histIdx++;
+    document.getElementById('cmd').value = cmdHist[cmdHist.length - 1 - histIdx] || '';
+  }
+}
+
+/* ══ SEND COMMAND ═══════════════════════════════════════════════════════ */
+async function sendCmd() {
+  const raw = document.getElementById('cmd').value.trim();
+  if (!raw) return;
+  document.getElementById('cmd').value = '';
+  charCount = 0;
+  document.getElementById('sb-chars').textContent = '0 input';
+  histIdx = -1;
+  cmdHist.push(raw);
+  await dispatchText(raw);
+  document.getElementById('cmd').focus();
+}
+
+async function dispatchText(raw) {
+  out('cmd-echo', '> ' + raw);
+  fetch('/api/log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_id: SID, command: raw })
+  }).catch(() => {});
+  await dispatch(raw.toUpperCase().trim(), raw);
+  scroll();
+}
+
+function clearScr() {
+  document.getElementById('output').innerHTML = '';
+  document.getElementById('cmd').focus();
+}
+
+/* ══ OUTPUT HELPERS ═════════════════════════════════════════════════════ */
+function out(cls, text) {
+  const d = document.createElement('div');
+  d.className = 'ln ' + cls;
+  d.textContent = text;
+  document.getElementById('output').appendChild(d);
+}
+function outR(cls, text) {
+  // output to right pane in split mode
+  const d = document.createElement('div');
+  d.className = 'ln ' + cls;
+  d.textContent = text;
+  const r = document.getElementById('output-right');
+  if (r) r.appendChild(d);
+}
+function mix(parts) {
+  const d = document.createElement('div');
+  d.className = 'ln';
+  parts.forEach(p => {
+    const s = document.createElement('span');
+    s.className = p.c || 'w';
+    s.textContent = p.t;
+    d.appendChild(s);
+  });
+  document.getElementById('output').appendChild(d);
+}
+function nl()     { out('w', ''); }
+function scroll() {
+  const o = document.getElementById('output'); o.scrollTop = o.scrollHeight;
+  const r = document.getElementById('output-right'); if (r) r.scrollTop = r.scrollHeight;
+}
+function pad(n)   { return String(n).padStart(2, '0'); }
+function rpad(s, n) { return String(s).padEnd(n, ' '); }
+function lpad(s, n) { return String(s).padStart(n, ' '); }
+
+function todayFmt() {
+  const n = new Date();
+  return `${pad(n.getDate())}${MO[n.getMonth()]}${n.getFullYear()}`;
+}
+function nowZ() {
+  const n = new Date();
+  return `${pad(n.getDate())}${MO[n.getMonth()]}${n.getFullYear()}/${pad(n.getHours())}${pad(n.getMinutes())}Z`;
+}
+
+function setBar(p) {
+  const loc = p ? (p.locator || '--------') : '--------';
+  const ttl = p ? (p.ttl || '-') : '-';
+  document.getElementById('sb-pnr').textContent = loc;
+  document.getElementById('sb-ttl').textContent  = ttl;
+  // Update breadcrumb
+  const bcpnr = document.getElementById('bc-pnr');
+  if (p && p.locator) {
+    const px = p.passengers && p.passengers[0];
+    const nm = px ? ` — ${px.last}/${px.first} ${px.title}` : '';
+    bcpnr.textContent = ` — ADD — ${p.locator}${nm}`;
+    // Bottom tab
+    const btab = document.getElementById('btab-pnr');
+    btab.style.display = 'flex';
+    document.getElementById('btab-pnr-name').textContent =
+      px ? `${px.last.slice(0,8)} ${px.title} (${p.locator})` : p.locator;
+  } else {
+    bcpnr.textContent = '';
+    document.getElementById('btab-pnr').style.display = 'none';
+  }
+}
+
+function initPnr() {
+  pnr = {
+    locator: null, status: 'OPEN', office: OFFICE, sine: 'AA',
+    passengers: [], itinerary: [], contacts: [],
+    osi: [], ssr: [], remarks: [], tst: [], rf: null, ttl: null
+  };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   COMMAND DISPATCH TABLE
+   Each entry: { exact[], pattern, fn(match, cmd, raw) }
+   ═════════════════════════════════════════════════════════════════════ */
+const CMD_TABLE = [
+  // ─ Navigation
+  { exact: ['HELP','HE'],          fn: ()        => switchView('help') },
+  { exact: ['CLR','CLEAR'],        fn: clearScr },
+  // ─ PNR state
+  { exact: ['IGNORE','IG'],        fn: ()        => cmdIgnore(false) },
+  { exact: ['ER'],                 fn: ()        => cmdEr(true) },
+  { exact: ['ET'],                 fn: ()        => cmdEr(false) },
+  // ─ Display
+  { exact: ['*A','*'],             fn: ()        => { switchView('terminal'); printPnr(pnr, 'A'); } },
+  { exact: ['*I'],                 fn: ()        => { switchView('terminal'); printPnr(pnr, 'I'); } },
+  { exact: ['*N'],                 fn: ()        => { switchView('terminal'); printPnr(pnr, 'N'); } },
+  { exact: ['*R'],                 fn: ()        => { switchView('terminal'); printPnr(pnr, 'R'); } },
+  { exact: ['RT'],                 fn: ()        => { switchView('terminal'); cmdRt(pnr?.locator || ''); } },
+  // ─ List / stats
+  { exact: ['LIST'],               fn: cmdList },
+  { exact: ['DBSTATS'],            fn: cmdStats },
+  // ─ Ticketing (exact forms)
+  { exact: ['TTP'],                fn: ()        => cmdTtp('TTP') },
+  { exact: ['XI'],                 fn: cmdXi },
+  { exact: ['TTE'],                fn: ()        => cmdTte('TTE') },
+  // ─ Split screen
+  { exact: ['SPLIT'],              fn: ()        => cmdSplit(true) },
+  { exact: ['SPLIT/OFF','UNSPLIT'],fn: ()        => cmdSplit(false) },
+  // ─ TWD
+  { exact: ['TWD'],                fn: ()        => cmdTwd('TWD') },
+  { exact: ['TWDRT'],              fn: ()        => cmdTwd('TWD') },
+  { exact: ['TWDRL'],              fn: ()        => cmdTwdList() },
+  { exact: ['TWH'],                fn: ()        => cmdTwh() },
+  // ─ Exchange / reissue
+  { exact: ['FXQ'],                fn: ()        => cmdFxq('FXQ') },
+  { exact: ['TQR'],                fn: ()        => cmdTqr() },
+  // ─ Pricing
+  { exact: ['FXP'],                fn: ()        => cmdFxp('FXP') },
+  { exact: ['FXX'],                fn: ()        => cmdFxx('FXX') },
+  { exact: ['FXB'],                fn: ()        => cmdFxb('FXB') },
+  { exact: ['FRD'],                fn: ()        => cmdFrd('FRD') },
+  { exact: ['TQT'],                fn: ()        => cmdTqt('TQT') },
+  { exact: ['TDN'],                fn: ()        => cmdTdn() },
+  // ─ MD/MU pagination
+  { exact: ['MD'],                 fn: ()        => fqnPageNext() },
+  { exact: ['MU'],                 fn: ()        => fqnPagePrev() },
+  // ─ Patterns
+  { pattern: /^RT\s+(\S+)/,        fn: (m)       => cmdRt(m[1]) },
+  { pattern: /^AN(\d{1,2})([A-Z]{3})([A-Z]{3})([A-Z]{3})(?:\/A([A-Z]{2}))?/,
+                                    fn: (m, c)    => cmdAn(c) },
+  { pattern: /^FQD([A-Z]{3})([A-Z]{3})/,
+                                    fn: (m, c)    => cmdFqd(c) },
+  { pattern: /^FXP\//,             fn: (m, c)    => cmdFxp(c) },
+  { pattern: /^FXX\//,             fn: (m, c)    => cmdFxx(c) },
+  { pattern: /^FXB\//,             fn: (m, c)    => cmdFxb(c) },
+  { pattern: /^FRD\//,             fn: (m, c)    => cmdFrd(c) },
+  { pattern: /^TQT\//,             fn: (m, c)    => cmdTqt(c) },
+  { pattern: /^SS(\d+)([A-Z])(\d+)/,
+                                    fn: (m, c)    => cmdSs(c) },
+  { pattern: /^NM(\d+)([A-Z])/,    fn: (m,c,raw) => cmdNm(raw) },
+  { pattern: /^APE\s/i,            fn: (m,c,raw) => cmdContact('APE', raw.trim().slice(4).trim()) },
+  { pattern: /^APM\s/i,            fn: (m,c,raw) => cmdContact('APM', raw.trim().slice(4).trim()) },
+  { pattern: /^AP\s/i,             fn: (m,c,raw) => cmdContact('AP',  raw.trim().slice(3).trim()) },
+  { pattern: /^RF\s/i,             fn: (m,c,raw) => cmdRf(raw.trim().slice(3).trim()) },
+  // ─ TWD with subcommands
+  { pattern: /^TWD\//,             fn: (m, c)    => cmdTwd(c) },
+  // ─ FQN fare rules
+  { pattern: /^FQN(\d+)(\*[A-Z]{2})?/, fn: (m, c) => cmdFqn(c) },
+  // ─ TTK exchange / reissue tools
+  { pattern: /^TTK\//,             fn: (m, c)    => cmdTtk(c) },
+  // ─ TTE delete TST
+  { pattern: /^TTE\//,             fn: (m, c)    => cmdTte(c) },
+  // ─ FHE historical ticket
+  { pattern: /^FHE\s*/,            fn: (m, c, raw) => cmdFhe(raw) },
+  // ─ FXQ with options
+  { pattern: /^FXQ\//,             fn: (m, c)    => cmdFxq(c) },
+  // ─ FP / FV / FE / FM / FPO
+  { pattern: /^FP\s+/,             fn: (m, c, raw) => cmdFp(raw) },
+  { pattern: /^FV\s+/,             fn: (m, c, raw) => cmdFv(raw) },
+  { pattern: /^FE\s+/,             fn: (m, c, raw) => cmdFe(raw) },
+  { pattern: /^FM\s+/,             fn: (m, c, raw) => cmdFm(raw) },
+  { pattern: /^FPO\//,             fn: (m, c, raw) => cmdFpo(raw) },
+  // ─ Ticketing / refund
+  { pattern: /^TTP\//,             fn: (m, c)    => cmdTtp(c) },
+  { pattern: /^TRFU/,              fn: (m, c)    => cmdTrfu(c) },
+  { pattern: /^XK(\d+)/,           fn: (m, c)    => cmdXk(c) },
+  { pattern: /^XE(\d+)/,           fn: (m, c)    => cmdXe(c) },
+  { pattern: /^SR\s+[A-Z]{4}/,     fn: (m,c,raw) => cmdSr(c, raw) },
+  { pattern: /^OS\s+/,             fn: (m,c,raw) => cmdOs(raw.slice(3).trim()) },
+  { pattern: /^RMZ?\s/i,           fn: (m,c,raw) => cmdRm(raw) },
+  { pattern: /^DNA([A-Z]{2})$/,    fn: (m)       => cmdDna(m[1]) },
+  { pattern: /^DAC([A-Z]{3})$/,    fn: (m)       => cmdDac(m[1]) },
+];
+
+async function dispatch(cmd, raw) {
+  // 1. Check exact matches
+  for (const entry of CMD_TABLE) {
+    if (entry.exact && entry.exact.includes(cmd)) {
+      await entry.fn(null, cmd, raw);
+      return;
+    }
+  }
+  // 2. Check pattern matches
+  for (const entry of CMD_TABLE) {
+    if (entry.pattern) {
+      const m = cmd.match(entry.pattern);
+      if (m) {
+        await entry.fn(m, cmd, raw);
+        return;
+      }
+    }
+  }
+  out('r', 'INVALID FORMAT');
+  out('d', 'ENTER HELP OR PRESS F4 FOR COMMAND REFERENCE');
+  nl();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   COMMAND IMPLEMENTATIONS
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* ── AN — Availability ─────────────────────────────────────────────── */
+async function cmdAn(cmd) {
+  const m = cmd.match(/^AN(\d{1,2})([A-Z]{3})([A-Z]{3})([A-Z]{3})(?:\/A([A-Z]{2}))?/);
+  if (!m) { out('r', 'FORMAT: AN20MAYCAIDXB'); nl(); return; }
+  const [, dd, mon, from, to, , airline] = m;
+  const monIdx = MO.indexOf(mon);
+  if (monIdx < 0) { out('r', 'INVALID MONTH: ' + mon); nl(); return; }
+  const yr  = new Date().getFullYear();
+  const dow = DAYS[new Date(yr, monIdx, parseInt(dd)).getDay()];
+  const date = pad(parseInt(dd)) + mon;
+
+  let url = `/api/availability/${from}/${to}`;
+  if (airline) url += `?airline=${airline}`;
+  let flights;
+  try {
+    flights = await fetch(url).then(r => r.json());
+    if (!Array.isArray(flights)) throw new Error(flights.error || 'API error');
+  } catch (e) { out('r', 'SYSTEM ERROR: ' + e.message); nl(); return; }
+
+  out('w', `** AMADEUS AVAILABILITY - AN ** ${from} ${to} ${dow} ${date} 0000`);
+  nl();
+  if (!flights.length) { out('y', 'NO FLIGHTS FOUND FOR THIS ROUTE'); nl(); return; }
+
+  lastAvail = flights.map(f => ({ ...f, _date: date }));
+
+  flights.forEach((f, i) => {
+    const ln  = lpad(i + 1, 2);
+    // Build class display: e.g. "Y9 B9 M9 K5 Q2"
+    const cls = (f.classes || []).map(c => `${c.class_code}${c.seats_avail >= 9 ? '9' : c.seats_avail}`).join(' ');
+    mix([
+      { c: 'w',  t: ln + ' ' },
+      { c: 'w',  t: rpad(f.airline, 3) },
+      { c: 'am', t: rpad(f.flight_num, 5) },
+      { c: 'w',  t: rpad(cls, 40) },
+      { c: 'w',  t: f.route_from + ' ' + f.dep_time + '  ' + f.route_to + ' ' + f.arr_time + '  ' },
+      { c: 'd',  t: f.aircraft + ' ' + (f.stops > 0 ? f.stops + 'ST' : '0') }
+    ]);
+  });
+  nl();
+  out('d', 'SELL EXAMPLE: SS1Y1  (1 SEAT, CLASS Y, LINE 1)');
+  nl();
+}
+
+/* ── FQD — Fares ───────────────────────────────────────────────────── */
+async function cmdFqd(cmd) {
+  const m = cmd.match(/^FQD([A-Z]{3})([A-Z]{3})(?:\/A([A-Z]{2}))?(?:\/C([A-Z]))?/);
+  if (!m) { out('r', 'FORMAT: FQDCAIDXB'); nl(); return; }
+  const [, from, to, airline, cabin] = m;
+
+  let url = `/api/fares/${from}/${to}`;
+  const qs = [];
+  if (airline) qs.push('airline=' + airline);
+  if (cabin)   qs.push('cabin='   + cabin);
+  if (qs.length) url += '?' + qs.join('&');
+
+  let fares;
+  try {
+    fares = await fetch(url).then(r => r.json());
+    if (!Array.isArray(fares)) throw new Error(fares.error || 'API error');
+  } catch (e) { out('r', 'SYSTEM ERROR: ' + e.message); nl(); return; }
+
+  out('w', `** AMADEUS FARES - FQD ** ${from} ${to}${airline ? ' AL:' + airline : ''}${cabin ? ' CL:' + cabin : ''}`);
+  nl();
+  if (!fares.length) { out('y', 'NO FARES FOUND'); nl(); return; }
+
+  lastFares = fares; // store for FQN follow-up
+
+  out('d', '  AL   FARE BASIS       BK    BASE FARE       TAXES      TOTAL      CUR    RULE/NOTE');
+  out('d', '  --   --------------  ---  -----------   ----------  ---------   ----   -------------------');
+  fares.forEach(f => {
+    const base  = parseFloat(f.base_fare);
+    const tax   = parseFloat(f.tax);
+    const total = (base + tax).toFixed(2);
+    mix([
+      { c: 'w',  t: '  ' + f.airline + '   ' },
+      { c: 'y',  t: rpad(f.fare_basis, 16) },
+      { c: 'w',  t: f.cabin + '    ' },
+      { c: 'w',  t: lpad(base.toFixed(2), 11) + '   ' },
+      { c: 'w',  t: lpad(tax.toFixed(2),  10) + '  ' },
+      { c: 'w',  t: lpad(total,            9) + '   ' },
+      { c: 'w',  t: f.currency + '    ' },
+      { c: 'd',  t: f.note || 'OW' }
+    ]);
+  });
+  nl();
+  out('d', 'USE FXP TO PRICE CURRENT ITINERARY   |   FRD FOR FARE RULES');
+  out('d', 'ENTER FQN1 FOR ALL RULES   |   FQN1*PE FOR PENALTIES   |   FQN1*AP FOR ADV PURCHASE');
+  nl();
+}
+
+/* ── SS — Sell Seat ────────────────────────────────────────────────── */
+function cmdSs(cmd) {
+  const m = cmd.match(/^SS(\d+)([A-Z])(\d+)/);
+  if (!m) { out('r', 'FORMAT: SS1Y1  (SEATS / CLASS / LINE)'); nl(); return; }
+  const seats = parseInt(m[1]), cls = m[2], line = parseInt(m[3]) - 1;
+
+  if (!lastAvail.length) { out('y', 'NO AVAILABILITY DISPLAYED — RUN AN FIRST'); nl(); return; }
+  if (line < 0 || line >= lastAvail.length) { out('r', `INVALID LINE ${line + 1}`); nl(); return; }
+
+  const fl = lastAvail[line];
+  const av = (fl.classes || []).find(c => c.class_code === cls);
+  if (!av)                  { out('r', `CLASS ${cls} NOT AVAILABLE ON ${fl.airline}${fl.flight_num}`); nl(); return; }
+  if (av.seats_avail < seats) { out('r', `ONLY ${av.seats_avail} SEAT(S) AVAILABLE IN CLASS ${cls}`); nl(); return; }
+
+  if (!pnr) initPnr();
+  const segNo = pnr.itinerary.length + 1;
+  const date  = fl._date || 'OPEN';
+  pnr.itinerary.push({
+    seg: segNo, airline: fl.airline, flight: fl.flight_num,
+    from: fl.route_from, to: fl.route_to, date,
+    dep: fl.dep_time, arr: fl.arr_time,
+    class: cls, status: 'HK', seats,
+    aircraft: fl.aircraft || '???'
+  });
+
+  mix([
+    { c: 'w',  t: lpad(segNo, 2) + '  ' },
+    { c: 'w',  t: fl.airline + ' ' },
+    { c: 'am', t: lpad(fl.flight_num, 3) + ' ' },
+    { c: 'w',  t: cls + ' ' + date + ' ' + fl.route_from + fl.route_to + ' HK' + seats },
+    { c: 'w',  t: '        ' + fl.dep_time + ' ' + fl.arr_time + '   ' },
+    { c: 'd',  t: '*1A/E*' }
+  ]);
+  nl();
+}
+
+/* ── NM — Name Entry ────────────────────────────────────────────────
+   REAL FORMAT: NM1LAST/FIRST TITLE(PTC)
+   or multiple: NM2LAST1/FIRST1 TITLE1-LAST2/FIRST2 TITLE2
+   ─────────────────────────────────────────────────────────────────── */
+function cmdNm(raw) {
+  // Strip leading "NM" + optional digit count
+  const header = raw.match(/^NM(\d+)/i);
+  if (!header) { out('r', 'FORMAT: NM1HASSAN/EMAD MR'); nl(); return; }
+  const declaredCount = parseInt(header[1]);
+  const body = raw.slice(raw.indexOf(header[0]) + header[0].length).trim();
+
+  if (!body) { out('r', 'FORMAT: NM1HASSAN/EMAD MR(ADT)'); nl(); return; }
+  if (!pnr) initPnr();
+
+  const entries = body.split('-');
+  const added = [];
+
+  for (const entry of entries) {
+    const trimmed = entry.trim().toUpperCase();
+    const slashIdx = trimmed.indexOf('/');
+    if (slashIdx < 1) {
+      out('r', 'INVALID NAME FORMAT: ' + trimmed + ' — USE LAST/FIRST TITLE');
+      continue;
+    }
+    const last = trimmed.slice(0, slashIdx);
+    const rest = trimmed.slice(slashIdx + 1);
+
+    // Extract optional (PTC) from end
+    const ptcMatch = rest.match(/\(([A-Z]{3})\)$/);
+    const ptc      = ptcMatch ? ptcMatch[1] : null;
+    const noParens = ptc ? rest.slice(0, -(ptc.length + 2)).trim() : rest.trim();
+
+    // Extract title from noParens
+    let title = null, first = noParens;
+    for (const t of TITLES) {
+      if (noParens.endsWith(' ' + t)) {
+        title = t; first = noParens.slice(0, -(t.length + 1)).trim(); break;
+      }
+      if (noParens === t) {
+        title = t; first = ''; break;
+      }
+    }
+    if (!title) title = 'MR';
+
+    const paxType = ptc || (['MSTR', 'MISS'].includes(title) ? 'CHD' : title === 'INF' ? 'INF' : 'ADT');
+    pnr.passengers.push({ last, first, title, pax_type: paxType });
+    added.push({ n: pnr.passengers.length, last, first, title, paxType });
+  }
+
+  if (added.length !== declaredCount) {
+    out('y', `NOTED: ${declaredCount} DECLARED, ${added.length} NAME(S) PROCESSED`);
+  }
+  added.forEach(p => {
+    mix([
+      { c: 'w',  t: '  ' + p.n + '.' },
+      { c: 'w',  t: p.last + '/' + p.first + ' ' + p.title },
+      { c: 'd',  t: '  (' + p.paxType + ')' }
+    ]);
+  });
+  nl();
+}
+
+/* ── AP / APM / APE — Contacts ─────────────────────────────────────── */
+function cmdContact(type, val) {
+  if (!pnr) initPnr();
+  pnr.contacts.push({ type, value: val });
+  out('w', '  ' + pnr.contacts.length + ' AP' + (type === 'APE' ? 'E' : type === 'APM' ? 'M' : '') + ' ' + val);
+  nl();
+}
+
+/* ── RF — Received From ────────────────────────────────────────────── */
+function cmdRf(val) {
+  if (!pnr) initPnr();
+  pnr.rf = val.toUpperCase();
+  out('w', '  RF-' + pnr.rf);
+  nl();
+}
+
+/* ── SR — Special Service Request ──────────────────────────────────── */
+function cmdSr(cmd, raw) {
+  // Format: SR CODE/P1/S2 or SR DOCS/P1-P/EGY/...
+  const m = cmd.match(/^SR\s+([A-Z]{4})(?:\/P(\d+))?(?:\/S(\d+))?/);
+  if (!m) { out('r', 'FORMAT: SR WCHR/P1 or SR VGML/P1/S2'); nl(); return; }
+  if (!pnr) initPnr();
+
+  const code  = m[1];
+  const paxN  = parseInt(m[2] || 1);
+  const segN  = m[3] ? parseInt(m[3]) : null;
+
+  // Extract free text after the modifiers
+  const freeIdx = cmd.indexOf(code) + code.length;
+  let freeText  = cmd.slice(freeIdx).replace(/\/P\d+/g, '').replace(/\/S\d+/g, '').replace(/^-/, '').trim();
+
+  // DOCS SSR — special handling
+  if (code === 'DOCS') {
+    // SR DOCS/P1-P/EGY/A1234567/EGY/15JAN80/M/31DEC30/LAST/FIRST
+    const docData = raw.toUpperCase().slice(raw.toUpperCase().indexOf('DOCS') + 4).replace(/\/P\d+/, '').trim().replace(/^-/, '');
+    freeText = docData;
+  }
+
+  const al = segN ? (pnr.itinerary[segN - 1]?.airline || 'YY') : (pnr.itinerary[0]?.airline || 'YY');
+  const seg = segN || pnr.itinerary.length || 1;
+
+  const isMeal = MEAL_SSR.includes(code);
+  const desc   = freeText || (isMeal ? code + ' REQUESTED' : code + ' REQUESTED');
+
+  pnr.ssr.push({ code, seg, pax: paxN, text: desc, airline: al });
+
+  mix([
+    { c: 'w',  t: '  SSR ' + code + ' ' },
+    { c: 'am', t: al + ' ' },
+    { c: 'w',  t: 'HK' + paxN + ' ' + desc }
+  ]);
+  nl();
+}
+
+/* ── OS — OSI ──────────────────────────────────────────────────────── */
+function cmdOs(text) {
+  if (!pnr) initPnr();
+  pnr.osi.push({ text: text.toUpperCase() });
+  out('w', '  OSI YY ' + text.toUpperCase());
+  nl();
+}
+
+/* ── RM — Remark ───────────────────────────────────────────────────── */
+function cmdRm(raw) {
+  if (!pnr) initPnr();
+  const isAccounting = raw.toUpperCase().startsWith('RMZ');
+  const text = raw.slice(raw.match(/^RMZ?\s/i)[0].length).trim().toUpperCase();
+  pnr.remarks.push({ type: isAccounting ? 'Z' : 'G', text });
+  out('w', '  RM' + (isAccounting ? 'Z' : '') + ' ' + text);
+  nl();
+}
+
+/* ── IGNORE ─────────────────────────────────────────────────────────── */
+function cmdIgnore(silent) {
+  if (!pnr && !silent) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  pnr = null;
+  setBar(null);
+  if (!silent) { out('w', 'IGNORED'); nl(); }
+}
+
+/* ── ER / ET — End Transaction ─────────────────────────────────────── */
+async function cmdEr(retrieve) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  const miss = [];
+  if (!pnr.passengers.length) miss.push('PASSENGER NAME (NM)');
+  if (!pnr.itinerary.length)  miss.push('ITINERARY SEGMENT (SS)');
+  if (!pnr.contacts.length)   miss.push('CONTACT ELEMENT (AP)');
+  if (!pnr.rf)                miss.push('RECEIVED FROM (RF)');
+  if (miss.length) {
+    out('r', 'MANDATORY ELEMENTS MISSING:');
+    miss.forEach(x => out('r', '  — ' + x));
+    nl(); return;
+  }
+
+  const ttlD = new Date();
+  ttlD.setDate(ttlD.getDate() + 3);
+  pnr.ttl     = `${pad(ttlD.getDate())}${MO[ttlD.getMonth()]}${ttlD.getFullYear()}/2359Z`;
+  pnr.created = todayFmt();
+
+  try {
+    if (pnr.locator) {
+      await fetch(`/api/pnr/${pnr.locator}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pnr)
+      });
+    } else {
+      const d = await fetch('/api/pnr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pnr)
+      }).then(r => r.json());
+      pnr.locator = d.locator;
+    }
+  } catch (e) { out('r', 'SAVE ERROR: ' + e.message); nl(); return; }
+
+  if (retrieve) {
+    switchView('terminal');
+    printPnr(pnr, 'A');
+  } else {
+    out('w', 'OK - ' + pnr.locator);
+    nl();
+  }
+  setBar(pnr);
+}
+
+/* ── RT — Retrieve ──────────────────────────────────────────────────── */
+async function cmdRt(query) {
+  // bare RT with no argument — re-display current working PNR
+  if (!query || query === 'RT') {
+    if (pnr) { printPnr(pnr, 'A'); setBar(pnr); return; }
+    out('y', 'NO ACTIVE BOOKING FILE'); nl(); return;
+  }
+  query = query.toUpperCase().trim();
+  // If we have an active working PNR matching the locator, show it directly
+  if (pnr && pnr.locator === query) {
+    printPnr(pnr, 'A'); setBar(pnr); return;
+  }
+  let found = null;
+  try {
+    if (/^[A-Z0-9]{6}$/.test(query)) {
+      const r = await fetch(`/api/pnr/${query}`);
+      if (r.ok) found = await r.json();
+    }
+    if (!found) {
+      const arr = await fetch(`/api/pnr-search/${encodeURIComponent(query)}`).then(r => r.json());
+      if (arr.length > 1) {
+        out('w', '--- NAME LIST ---');
+        arr.forEach((p, i) => {
+          const px = p.passengers?.[0];
+          out('w', `  ${i + 1}. ${p.locator}  ${px ? px.last + '/' + px.first + ' ' + px.title : '???'}`);
+        });
+        nl(); return;
+      }
+      if (arr.length === 1) found = arr[0];
+    }
+  } catch (e) { out('r', 'SYSTEM ERROR: ' + e.message); nl(); return; }
+
+  if (!found) { out('r', `PNR ${query} — NOT FOUND IN SYSTEM`); nl(); return; }
+  pnr = found;
+  pnr.ssr      = pnr.ssr      || [];
+  pnr.osi      = pnr.osi      || [];
+  pnr.remarks  = pnr.remarks  || [];
+  pnr.tst      = pnr.tst      || [];
+  pnr.contacts = pnr.contacts || [];
+  setBar(pnr);
+  printPnr(pnr, 'A');
+}
+
+/* ── printPnr — Authentic Amadeus PNR Display ───────────────────────── */
+function printPnr(p, mode) {
+  if (!p) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+
+  // ─ Header
+  out('d', '--- RLR MSC ---');
+  const loc  = p.locator  || '------';
+  const off  = p.office   || OFFICE;
+  const crd  = p.created  || todayFmt();
+  const crdZ = crd + '/' + (p.createdTime || nowZ().split('/')[1]);
+  out('w', `RP/${off}/${off}    SU/${p.sine || 'AA'} ${crdZ}    ${loc}`);
+
+  // ─ Names (numbered 1.LAST/FIRST TITLE — no element line number)
+  if (p.passengers?.length) {
+    const nameLine = p.passengers
+      .map((px, i) => `${i + 1}.${px.last}/${px.first} ${px.title}`)
+      .join('    ');
+    out('w', '  ' + nameLine);
+  }
+
+  // ─ Element counter starts at 2 (1 is always names line)
+  let el = 2;
+
+  // ─ Itinerary segments
+  if (mode === 'A' || mode === 'I') {
+    p.itinerary?.forEach(s => {
+      const stColor = s.status === 'XX' ? 'r' : 'w';
+      const dayStr  = s.day   ? ' ' + s.day : '';
+      mix([
+        { c: 'w',     t: lpad(el++, 2) + '  ' },
+        { c: 'w',     t: s.airline + ' ' },
+        { c: 'am',    t: lpad(s.flight, 3) + ' ' },
+        { c: stColor, t: s.class + ' ' + rpad((s.date||'OPEN'), 7) + (dayStr ? dayStr + ' ' : ' ') },
+        { c: 'w',     t: s.from + s.to + ' ' },
+        { c: stColor, t: s.status + s.seats + '  ' },
+        { c: 'w',     t: rpad(s.dep||'----', 6) + ' ' + rpad(s.arr||'----', 6) + ' ' },
+        { c: 'd',     t: '*1A/E*' }
+      ]);
+    });
+  }
+
+  if (mode === 'A' || mode === 'R') {
+    // ─ Contacts (AP elements)
+    p.contacts?.forEach(c => {
+      const label = c.type === 'APE' ? 'APE' : c.type === 'APM' ? 'APM' : 'AP ';
+      out('w', lpad(el++, 2) + ' ' + label + ' ' + c.value);
+    });
+
+    // ─ TK — Ticketing arrangement
+    const tkStatus = p.status === 'TICKETED' ? 'OK' : 'TL';
+    const tkDate   = p.ttl ? p.ttl.split('/')[0] : todayFmt();
+    out('w', lpad(el++, 2) + ` TK ${tkStatus}${tkDate}/${off}//ETMS`);
+
+    // ─ FA — Fare/ticket elements (if ticketed)
+    if (p.tst?.length && p.status === 'TICKETED') {
+      p.tst.forEach((t, ti) => {
+        const tktNum = t.eticket || '---';
+        const segRange = `S${2}` + (p.itinerary?.length > 1 ? `-${p.itinerary.length + 1}` : '');
+        out('c', lpad(el++, 2) + ` FA PAX ${tktNum}/ETMS/${t.currency}${t.total.toFixed(2)}/${p.created||todayFmt()}/${off}/00000${ti+1}/${segRange}/P${t.paxNum}`);
+        out('w', lpad(el++, 2) + ` FB PAX 0000000000 TTP/RT OK ETICKET/${segRange}`);
+      });
+    }
+
+    // ─ FE — Endorsement
+    if (p.endorsement) {
+      const segRange = p.itinerary?.length > 1 ? `S2-${p.itinerary.length + 1}` : 'S2';
+      out('w', lpad(el++, 2) + ` FE PAX ${p.endorsement}/${segRange}`);
+    }
+
+    // ─ FP — Form of payment
+    if (p.fop) {
+      out('w', lpad(el++, 2) + ` FP PAX ${p.fop}`);
+    }
+
+    // ─ FV — Validating carrier
+    if (p.validatingCarrier) {
+      out('w', lpad(el++, 2) + ` FV PAX ${p.validatingCarrier}`);
+    }
+
+    // ─ FM — Commission
+    if (p.commission) {
+      out('w', lpad(el++, 2) + ` FM PAX ${p.commission}`);
+    }
+
+    // ─ SSR lines
+    p.ssr?.forEach(s => {
+      const al = s.airline || p.itinerary?.[s.seg - 1]?.airline || 'YY';
+      mix([
+        { c: 'w',  t: lpad(el++, 2) + ' SSR ' + s.code + ' ' },
+        { c: 'am', t: al + ' ' },
+        { c: 'w',  t: 'HK' + s.pax + ' ' + s.text }
+      ]);
+    });
+
+    // ─ OSI lines
+    p.osi?.forEach(o => {
+      out('w', lpad(el++, 2) + ' OSI YY ' + o.text);
+    });
+
+    // ─ General remarks
+    p.remarks?.forEach(r => {
+      const rtype = (r.type === 'Z') ? 'RMZ' : 'RM ';
+      out('w', lpad(el++, 2) + ' ' + rtype + (r.text || r));
+    });
+
+    // ─ OPW / OPC — Ticketing deadline
+    if (p.ttl) {
+      const ttlShort = p.ttl.split('/')[0];
+      const ttlTime  = p.ttl.includes('/') ? p.ttl.split('/')[1] : '2359Z';
+      const segLast  = (p.itinerary?.length || 1) + 1;
+      out('y', lpad(el++, 2) + ` OPW/${ttlShort}:${ttlTime}/1C7/ET REQUIRES TICKET ON OR BEFORE ${ttlShort}`);
+      out('y', lpad(el++, 2) + ` OPC/${ttlShort}:${ttlTime}/1C8/ET CANCELLATION DUE TO NO TICKET/S2-${segLast}`);
+    }
+
+    // ─ RF — Received from
+    if (p.rf) {
+      out('w', lpad(el++, 2) + ' RF-' + p.rf);
+    }
+  }
+
+  // ─ TST indicator
+  if (p.tst?.length) {
+    out('c', lpad(el++, 2) + ` TST RLR — ${p.tst.length} TST(S) — ENTER TQT TO DISPLAY`);
+  }
+
+  // ─ Footer
+  const stColor = p.status === 'TICKETED' ? 'g' : p.status === 'REFUNDED' ? 'r' : 'am';
+  nl();
+  out(stColor, '*' + (p.status || 'OPEN').toUpperCase() + '*');
+  out('d', '*TRN*');
+  nl();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PRICING COMMANDS — FXP / FXX / FXB / FRD
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* ── FXP — Price & Create TST ──────────────────────────────────────── */
+async function cmdFxp(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (!pnr.passengers.length) { out('r', 'ADD PASSENGER NAME BEFORE PRICING'); nl(); return; }
+  if (!pnr.itinerary.length)  { out('r', 'ADD ITINERARY BEFORE PRICING');      nl(); return; }
+
+  const segs = pnr.itinerary.filter(s => s.status !== 'XX');
+  if (!segs.length) { out('r', 'NO ACTIVE SEGMENTS — ALL SEGMENTS CANCELLED'); nl(); return; }
+
+  let fares = [];
+  try {
+    fares = await fetch(`/api/fares/${segs[0].from}/${segs[segs.length - 1].to}`).then(r => r.json());
+    if (!Array.isArray(fares)) fares = [];
+  } catch {}
+
+  const fareByPtc = {};
+  pnr.passengers.forEach(px => {
+    const ptc      = px.pax_type || 'ADT';
+    const matchFare = fares.find(f => f.cabin === (segs[0]?.class || 'Y')) || fares[0];
+    const base     = matchFare ? parseFloat(matchFare.base_fare) : 4800.00;
+    const tax      = matchFare ? parseFloat(matchFare.tax)       : 480.00;
+    const currency = matchFare ? matchFare.currency              : 'EGP';
+    const fareBasis= matchFare ? matchFare.fare_basis            : (segs[0]?.class || 'Y') + 'OWEGB';
+    const mult     = ptc === 'CHD' ? 0.75 : ptc === 'INF' ? 0.10 : 1.0;
+    fareByPtc[ptc] = { base: +(base * mult).toFixed(2), tax: +(tax * mult).toFixed(2), currency, fareBasis };
+  });
+
+  if (!pnr.tst) pnr.tst = [];
+  const newTsts = [];
+
+  pnr.passengers.forEach((px, idx) => {
+    const ptc   = px.pax_type || 'ADT';
+    const fd    = fareByPtc[ptc];
+    const total = +(fd.base + fd.tax).toFixed(2);
+    // Build per-segment calc pieces
+    const segCalc = segs.map((s, si) => {
+      const portion = (fd.base / segs.length);
+      const q       = (20).toFixed(2);
+      return si === 0
+        ? `${s.from} ${s.airline} ${s.to} Q${q} ${portion.toFixed(2)}`
+        : `${s.airline} ${s.to} Q${q} ${portion.toFixed(2)}`;
+    }).join('');
+
+    const tst = {
+      id:         pnr.tst.length + idx + 1,
+      paxNum:     idx + 1,
+      paxName:    `${px.last}/${px.first} ${px.title}`,
+      ptc,
+      fareBasis:  fd.fareBasis,
+      currency:   fd.currency,
+      baseFare:   fd.base,
+      taxes:      fd.tax,
+      total,
+      calcLine:   segCalc,
+      fop:        pnr.fop || 'CASH',
+      endorsement:pnr.endorsement || null,
+      createdAt:  nowZ()
+    };
+    pnr.tst.push(tst);
+    newTsts.push(tst);
+  });
+
+  // ── Authentic Amadeus TST display ──
+  out('c', '*TST*');
+  nl();
+
+  newTsts.forEach(t => {
+    out('am', `TST NR ${String(t.id).padStart(3,'0')}  PAX NR ${String(t.paxNum).padStart(3,'0')}/${t.paxName}(${t.ptc})`);
+    out('d',  '  AL FLGT BK  DATE    FARE BASIS     NVB      NVA      BG');
+    out('d',  '  ' + '─'.repeat(60));
+
+    segs.forEach(s => {
+      mix([
+        { c: 'w',  t: '  ' + s.airline + '  ' },
+        { c: 'am', t: lpad(s.flight, 3) + '  ' },
+        { c: 'w',  t: s.class + '  ' + rpad(s.date || 'OPEN', 8) },
+        { c: 'y',  t: rpad(t.fareBasis, 15) + '  ' },
+        { c: 'd',  t: rpad(s.date || 'OPEN', 9) + rpad(s.date || 'OPEN', 9) + '20K' }
+      ]);
+    });
+
+    nl();
+    out('w', `  ${t.currency}    ${t.baseFare.toFixed(2)}   ${t.calcLine}NUC${t.baseFare.toFixed(2)}END ROE1.00`);
+    out('d',  '  ' + '─'.repeat(60));
+    mix([{ c: 'd', t: '  FARE AMOUNT     : ' }, { c: 'w',  t: rpad(t.currency, 5) + lpad(t.baseFare.toFixed(2), 12) }]);
+    mix([{ c: 'd', t: '  TAX/SURCHARGES  : ' }, { c: 'w',  t: rpad(t.currency, 5) + lpad(t.taxes.toFixed(2),    12) }]);
+    mix([{ c: 'd', t: '  GRAND TOTAL     : ' }, { c: 'am', t: rpad(t.currency, 5) + lpad(t.total.toFixed(2),    12) }]);
+    mix([{ c: 'd', t: '  FORM OF PAYMENT : ' }, { c: 'w',  t: t.fop }]);
+    const ttlDate = new Date(); ttlDate.setDate(ttlDate.getDate() + 3);
+    out('y',  `  LAST TKT DTE ${pad(ttlDate.getDate())}${MO[ttlDate.getMonth()]}${ttlDate.getFullYear()}/23:59 LT IN POS`);
+    out('d',  `  FARE FAMILY: (ENTER FQN1 FOR RULES  |  FQN1*PE FOR PENALTIES)`);
+    nl();
+  });
+
+  const grand = newTsts.reduce((s, t) => s + t.total, 0);
+  out('g', `TST CREATED — ${newTsts.length} PAX — TOTAL: ${newTsts[0].currency} ${grand.toFixed(2)}`);
+  out('d', 'ENTER TQT TO DISPLAY   |   TTP TO ISSUE   |   FQN1*PE FOR FARE RULES');
+  nl();
+  renderTstView();
+}
+
+/* ── FXX — Price By Exception ──────────────────────────────────────── */
+async function cmdFxx(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (!pnr.itinerary?.length) { out('r', 'NO ITINERARY — ADD SEGMENTS FIRST'); nl(); return; }
+
+  // Parse exception modifiers
+  const clM  = cmd.match(/\/CL?-?([A-Z])/);
+  const dtM  = cmd.match(/\/DT-?(\d{1,2}[A-Z]{3})/);
+  const p1M  = cmd.match(/\/P(\d+)/);
+
+  if (clM) out('d', `FARE CLASS OVERRIDE: ${pnr.itinerary[0]?.class} → ${clM[1]}`);
+  if (dtM) out('d', `DATE OVERRIDE: ${dtM[1]}`);
+  if (p1M) out('d', `PRICING FOR PASSENGER ${p1M[1]} ONLY`);
+  if (!clM && !dtM && !p1M) out('d', 'FXX — PRICE BY EXCEPTION / MANUAL FARE ENTRY');
+  nl();
+
+  // Apply class override to itinerary if specified
+  if (clM) pnr.itinerary.forEach(s => { if (s.status !== 'XX') s.class = clM[1]; });
+
+  // Delete existing TSTs and reprice
+  pnr.tst = [];
+  await cmdFxp(cmd);
+}
+
+/* ── FXB — Corporate/Negotiated Pricing ────────────────────────────── */
+async function cmdFxb(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  out('w', 'FXB — CORPORATE NEGOTIATED FARE PRICING');
+  const corp = cmd.includes('/') ? cmd.split('/').slice(1).join('/') : 'STANDARD';
+  out('d', 'APPLYING NEGOTIATED FARE CODES: ' + corp);
+  nl();
+  out('y', 'SIMULATION: NO CORPORATE AGREEMENT ON FILE — DEFAULTING TO BEST PUBLISHED FARE');
+  nl();
+  await cmdFxp(cmd);
+}
+
+/* ── FRD — Fare Rules Display ──────────────────────────────────────── */
+async function cmdFrd(cmd) {
+  if (!pnr && !pnr?.tst?.length) { out('y', 'NO ACTIVE PNR — RETRIEVE A PNR FIRST'); nl(); return; }
+
+  const seg    = pnr?.itinerary?.[0];
+  const tst    = pnr?.tst?.[0];
+  const from   = seg?.from   || '???';
+  const to     = seg?.to     || '???';
+  const al     = seg?.airline|| '??';
+  const cls    = seg?.class  || 'Y';
+  const basis  = tst?.fareBasis || 'YOW';
+
+  out('am', '--- FARE RULES ---');
+  out('w',  `FARE COMPONENT   : ${from} ${to}`);
+  out('w',  `CARRIER/FARE BASIS: ${al} ${basis}  CLASS ${cls}`);
+  out('d',  '─'.repeat(64));
+  nl();
+
+  const rules = buildFareRules(al, cls, basis);
+  rules.forEach(r => {
+    out('am', r.para + '  ' + r.title.toUpperCase());
+    r.lines.forEach(l => out('w', '     ' + l));
+    nl();
+  });
+
+  out('d', '--- END OF FARE RULES ---');
+  nl();
+}
+
+function buildFareRules(al, cls, basis) {
+  const isFlexible = ['Y','B','M'].includes(cls);
+  const isRestricted = ['Q','K','L','U'].includes(cls);
+  return [
+    {
+      para: '01', title: 'Rule Application & Other Conditions',
+      lines: [
+        'UNLESS OTHERWISE SPECIFIED',
+        `FARES IN THIS RULE APPLY ON CARRIER ${al} FLIGHTS`,
+        isFlexible
+          ? 'FARE IS FULLY REFUNDABLE BEFORE DEPARTURE'
+          : 'FARE IS NON-REFUNDABLE AFTER TICKETING'
+      ]
+    },
+    {
+      para: '03', title: 'Accompanied Travel',
+      lines: ['NOT APPLICABLE']
+    },
+    {
+      para: '04', title: 'Children/Infant Discounts',
+      lines: [
+        'ACCOMPANIED CHILD (CHD/2-11): 75 PCT OF ADULT FARE',
+        'INFANT (INF/0-2): 10 PCT OF ADULT FARE / NO SEAT',
+        'INFANT WITH SEAT (INF): 75 PCT OF ADULT FARE'
+      ]
+    },
+    {
+      para: '06', title: 'Advance Purchase',
+      lines: [
+        isRestricted
+          ? 'TICKETS MUST BE PURCHASED MINIMUM 7 DAYS BEFORE DEPARTURE'
+          : 'NO ADVANCE PURCHASE REQUIREMENT'
+      ]
+    },
+    {
+      para: '07', title: 'Minimum Stay',
+      lines: [isRestricted ? 'MINIMUM STAY: SATURDAY NIGHT AT DESTINATION' : 'NOT APPLICABLE']
+    },
+    {
+      para: '08', title: 'Maximum Stay',
+      lines: ['MAXIMUM STAY: 1 YEAR FROM DATE OF COMMENCEMENT OF TRAVEL']
+    },
+    {
+      para: '09', title: 'Sales Restrictions',
+      lines: ['VALID FOR SALE VIA AMADEUS GLOBAL DISTRIBUTION SYSTEM ONLY']
+    },
+    {
+      para: '10', title: 'Travel Restrictions',
+      lines: [
+        'TRAVEL MUST COMMENCE ON OR BEFORE 12 MONTHS AFTER ISSUANCE',
+        isRestricted ? 'BLACKOUT DATES MAY APPLY — CHECK AT TIME OF BOOKING' : 'NO TRAVEL RESTRICTION'
+      ]
+    },
+    {
+      para: '15', title: 'Penalties',
+      lines: [
+        isFlexible
+          ? 'CHANGE FEE: USD 0 (CHANGES PERMITTED WITHOUT PENALTY)'
+          : 'CHANGE FEE: USD 200.00 PER PERSON PER CHANGE',
+        isFlexible
+          ? 'CANCELLATION: FULL REFUND TO ORIGINAL FORM OF PAYMENT'
+          : 'CANCELLATION AFTER TICKETING: NON-REFUNDABLE',
+        'NO-SHOW: NON-REFUNDABLE / SEAT FORFEITED'
+      ]
+    },
+    {
+      para: '16', title: 'Transfers/Routing',
+      lines: [
+        `ROUTING: ${al} ONLINE CONNECTIONS PERMITTED`,
+        'STOPOVERS: NOT PERMITTED ON ONE-WAY (OW) FARES'
+      ]
+    },
+    {
+      para: '18', title: 'Ticket Endorsements',
+      lines: [
+        isFlexible
+          ? 'ENDORSEMENTS: REFUNDABLE/CHANGEABLE'
+          : 'ENDORSEMENTS: NON-ENDO/NON-REF AFTER DEPARTURE',
+        'FARE IS VALID ONLY ON TICKET WITH PLATING CARRIER: ' + al
+      ]
+    }
+  ];
+}
+
+/* ── TQT — Display TST(s) ──────────────────────────────────────────── */
+function cmdTqt(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (!pnr.tst || !pnr.tst.length) {
+    out('y', 'NO TST ON FILE — USE FXP TO PRICE THE PNR');
+    nl(); return;
+  }
+
+  let tsts = pnr.tst;
+  const tm = cmd.match(/\/T(\d+)/);
+  if (tm) {
+    const idx = parseInt(tm[1]) - 1;
+    if (idx < 0 || idx >= tsts.length) { out('r', 'TST ' + tm[1] + ' NOT FOUND'); nl(); return; }
+    tsts = [tsts[idx]];
+  }
+  const summary = cmd.includes('/TS');
+
+  out('c', '*TST*');
+  nl();
+
+  tsts.forEach(t => {
+    out('am', `TST NR ${String(t.id).padStart(3,'0')}  PAX NR ${String(t.paxNum).padStart(3,'0')}/${t.paxName}(${t.ptc})`);
+    if (t.exchangeMode) out('y', '  ** EXCHANGE/REISSUE MODE **');
+
+    if (!summary) {
+      // Authentic segment table
+      out('d', '  AL FLGT BK  DATE  FARE BASIS   NVB      NVA      BG');
+      out('d', '  ' + '─'.repeat(62));
+      const segs = pnr.itinerary?.filter(s => s.status !== 'XX') || [];
+      segs.forEach(s => {
+        mix([
+          { c: 'w',  t: '  ' + s.airline + '  ' },
+          { c: 'am', t: lpad(s.flight, 3) + '  ' },
+          { c: 'w',  t: s.class + '  ' + rpad(s.date || 'OPEN', 6) + '  ' },
+          { c: 'y',  t: rpad(t.fareBasis || 'YOW', 13) + '  ' },
+          { c: 'd',  t: rpad(s.date || 'OPEN', 9) + rpad(s.date || 'OPEN', 9) + '20K' }
+        ]);
+      });
+      nl();
+
+      // Fare calculation line
+      const segsCalc = segs.map((s, i) =>
+        i === 0 ? `${s.from} ${s.airline} ${s.to} Q${(20).toFixed(2)} ${(t.baseFare/Math.max(segs.length,1)).toFixed(2)}`
+                : `${s.airline} ${s.to} Q${(20).toFixed(2)} ${(t.baseFare/Math.max(segs.length,1)).toFixed(2)}`
+      ).join('');
+      out('w', `  ${t.currency}     ${t.baseFare.toFixed(2)}   ${segsCalc}NUC${t.baseFare.toFixed(2)}END ROE1.00`);
+
+      if (t.exchangeAdc !== undefined) {
+        out('y', `  ADC:             ${t.currency}  ${t.exchangeAdc.toFixed(2)}`);
+      }
+
+      out('d', '  ' + '─'.repeat(62));
+      mix([{ c: 'd', t: '  FARE AMOUNT     : ' }, { c: 'w',  t: t.currency + '   ' + lpad(t.baseFare.toFixed(2), 12) }]);
+      mix([{ c: 'd', t: '  TAX/SURCHARGES  : ' }, { c: 'w',  t: t.currency + '   ' + lpad(t.taxes.toFixed(2),    12) }]);
+      out('d', '  ' + '─'.repeat(62));
+      mix([{ c: 'd', t: '  GRAND TOTAL     : ' }, { c: 'am', t: t.currency + '   ' + lpad(t.total.toFixed(2),    12) }]);
+      mix([{ c: 'd', t: '  FORM OF PAYMENT : ' }, { c: 'w',  t: pnr.fop || t.fop || 'NOT ENTERED — USE FP' }]);
+      if (pnr.validatingCarrier) mix([{ c: 'd', t: '  VALIDATING CARR : ' }, { c: 'w', t: pnr.validatingCarrier }]);
+      if (pnr.endorsement)       mix([{ c: 'd', t: '  ENDORSEMENT     : ' }, { c: 'w', t: pnr.endorsement }]);
+
+      // Ticket time limit
+      const ttlDate = new Date(); ttlDate.setDate(ttlDate.getDate() + 3);
+      const ttlStr = `${pad(ttlDate.getDate())}${MO[ttlDate.getMonth()]}${ttlDate.getFullYear()}`;
+      out('y', `  LAST TKT DTE ${ttlStr}/23:59 LT IN POS`);
+      out('d', '  FARE FAMILY: (ENTER FQN1 FOR RULES  FQN1*PE FOR PENALTIES)');
+      mix([{ c: 'd', t: '  CREATED         : ' }, { c: 'd', t: t.createdAt }]);
+    } else {
+      mix([{ c: 'd', t: '  GRAND TOTAL : ' }, { c: 'am', t: t.currency + '   ' + lpad(t.total.toFixed(2), 12) }]);
+    }
+    nl();
+  });
+
+  out('d', `--- ${tsts.length} TST(S) DISPLAYED ---`);
+  nl();
+  renderTstView();   // update F2 tab silently in background
+}
+
+/* ── TWD — E-Ticket Waybill Display ──────────────────────────────────── */
+function cmdTwd(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+
+  // Determine which passengers have tickets
+  const ticketedPax = pnr.passengers.filter(px => px.eticket);
+
+  // TWD/TAX — tax breakdown
+  if (cmd && cmd.includes('/TAX')) {
+    const tst = pnr.tst?.[0];
+    if (!tst) { out('y', 'NO TICKET ON FILE'); nl(); return; }
+    out('c', `TKT-${tst.eticket || '---'}  TAX/FEE DETAIL`);
+    nl();
+    out('d', rpad('TAX', 6) + rpad('AMOUNT', 10) + rpad('CURRENCY', 10) + 'DESCRIPTION');
+    out('d', '─'.repeat(56));
+    const taxAmt = tst.taxes;
+    const yq = +(taxAmt * 0.50).toFixed(2);
+    const eg = +(taxAmt * 0.25).toFixed(2);
+    const yr = +(taxAmt - yq - eg).toFixed(2);
+    out('w', rpad('EG', 6) + rpad(eg.toFixed(2), 10) + rpad(tst.currency, 10) + 'EGYPT DEPARTURE TAX');
+    out('w', rpad('YQ', 6) + rpad(yq.toFixed(2), 10) + rpad(tst.currency, 10) + 'CARRIER SURCHARGE');
+    out('w', rpad('YR', 6) + rpad(yr.toFixed(2), 10) + rpad(tst.currency, 10) + 'CARRIER IMPOSED FEE');
+    out('d', '      ' + '─'.repeat(10));
+    out('am', rpad('TOTAL', 6) + rpad(taxAmt.toFixed(2), 10) + tst.currency);
+    nl();
+    renderTwdView(pnr.tst[0], 'TAX');
+    return;
+  }
+
+  // TWD/{n} — select by number from list (multi-pax)
+  const numM = cmd && cmd.match(/\/(\d+)$/);
+  if (numM) {
+    const idx = parseInt(numM[1]) - 1;
+    const tst = pnr.tst?.[idx];
+    if (!tst) { out('r', 'TST ' + numM[1] + ' NOT FOUND'); nl(); return; }
+    printTwd(tst);
+    renderTwdView(tst);
+    return;
+  }
+
+  // TWD/L{n} — by FA element line number
+  const lM = cmd && cmd.match(/\/L(\d+)/i);
+  if (lM) {
+    const lineN = parseInt(lM[1]);
+    // Find TST whose FA element line matches
+    const tst = pnr.tst?.[lineN - 1] || pnr.tst?.[0];
+    if (!tst) { out('r', 'NO TICKET AT LINE ' + lineN); nl(); return; }
+    printTwd(tst);
+    renderTwdView(tst);
+    return;
+  }
+
+  // No sub-command
+  if (!pnr.tst || !pnr.tst.length) {
+    out('y', 'NO TST ON FILE — PRICE PNR WITH FXP THEN ISSUE WITH TTP');
+    nl(); return;
+  }
+
+  // Multi-passenger → show list
+  if (pnr.tst.length > 1) {
+    cmdTwdList();
+    return;
+  }
+
+  // Single ticket → display directly
+  printTwd(pnr.tst[0]);
+  renderTwdView(pnr.tst[0]);  // update F5 silently
+}
+
+function cmdTwdList() {
+  if (!pnr?.tst?.length) { out('y', 'NO TICKET ON FILE'); nl(); return; }
+  out('c', `*TWD LIST*  ${pnr.locator || '------'}`);
+  nl();
+  out('d', '   LN  ' + rpad('TICKET NUMBER', 22) + rpad('PASSENGER', 26) + rpad('ROUTE', 16) + rpad('DATE', 10) + 'STATUS');
+  out('d', '   --  ' + '─'.repeat(90));
+  pnr.tst.forEach((t, i) => {
+    const tktNum = t.eticket || '---';
+    const route  = pnr.itinerary?.map(s => s.from).join('-') + (pnr.itinerary?.length ? '-' + pnr.itinerary.slice(-1)[0].to : '');
+    const status = pnr.status === 'TICKETED' ? 'OPEN' : 'CONFIRMED';
+    mix([
+      { c: 'w',  t: '    ' + (i + 1) + '  ' },
+      { c: 'c',  t: rpad(tktNum, 22) },
+      { c: 'w',  t: rpad(t.paxName, 26) },
+      { c: 'w',  t: rpad(route, 16) },
+      { c: 'd',  t: rpad(pnr.created || todayFmt(), 10) },
+      { c: 'g',  t: status }
+    ]);
+  });
+  nl();
+  out('d', 'ENTER TWD/1 OR TWD/2  OR  TWD/L{FA LINE NUMBER}');
+  nl();
+}
+
+function printTwd(t) {
+  if (!t) return;
+  const loc   = pnr.locator || '------';
+  const tkt   = t.eticket || '000-0000000000';
+  const segs  = pnr.itinerary || [];
+  const odFrom = segs[0]?.from || '???';
+  const odTo   = segs.slice(-1)[0]?.to || '???';
+  const doi    = pnr.created || todayFmt();
+
+  out('c', `TKT-${tkt}     RCI- 1A  LOC-${loc}`);
+  out('w', `OD-${odFrom}${odTo}  SI-         FCPI-0`);
+  out('w', `POI-${odFrom}  DOI-${doi}   IOI-${Math.floor(Math.random()*90000000+10000000)}`);
+  nl();
+  out('w', `1.${t.paxName.padEnd(40)}${t.ptc}`);
+
+  segs.forEach((s, i) => {
+    const status = pnr.status === 'TICKETED' ? 'O' : pnr.status === 'REFUNDED' ? 'R' : pnr.status === 'CANCELLED' ? 'V' : 'O';
+    const nvb    = s.date || 'OPEN';
+    const nva    = s.date || 'OPEN';
+    mix([
+      { c: 'w',  t: `ST  ${i + 1} O${s.from} ` },
+      { c: 'am', t: s.airline + ' ' },
+      { c: 'w',  t: `${lpad(s.flight, 3)} ${s.class} ${(s.date || 'OPEN').padEnd(8)}${s.dep || '----'}  ` },
+      { c: 'g',  t: status + '   ' },
+      { c: 'y',  t: rpad(t.fareBasis || 'YOW', 12) },
+      { c: 'w',  t: `O  ${nvb} ${nva}  20K` },
+    ]);
+    mix([{ c: 'd', t: `    ${s.from.padEnd(24)}${s.to}` }]);
+  });
+
+  nl();
+  out('w', rpad('FARE  F  ' + t.currency, 20) + lpad(t.baseFare.toFixed(2), 14));
+  out('w', rpad('EQUIV    ' + t.currency, 20) + lpad(t.baseFare.toFixed(2), 14));
+  out('w', rpad('TOTALTAX ' + t.currency, 20) + lpad(t.taxes.toFixed(2), 14));
+  out('am', rpad('TOTAL    ' + t.currency, 20) + lpad(t.total.toFixed(2), 14));
+  nl();
+
+  // Fare calc line
+  const calcSegs = segs.map((s, i) => {
+    return i === 0 ? `${s.from} ${s.airline} ${s.to} Q${(20).toFixed(2)} ${(t.baseFare/segs.length).toFixed(2)}` :
+                     `${s.airline} ${s.to} Q${(20).toFixed(2)} ${(t.baseFare/segs.length).toFixed(2)}`;
+  }).join('');
+  out('w', `/FC ${calcSegs}NUC${t.baseFare.toFixed(2)}END ROE1.00`);
+  out('w', `FP  ${t.fop || 'CASH'}`);
+  out('w', `FE  ${t.endorsement || 'NONREF/RESTR APPLY'}`);
+  nl();
+  out('d', 'FOR TAX/FEE DETAILS USE TWD/TAX');
+  nl();
+}
+
+function cmdTwh() {
+  if (!pnr?.tst?.length) { out('y', 'NO TICKET ON FILE'); nl(); return; }
+  const t = pnr.tst[0];
+  out('am', '--- TICKET HISTORY ---');
+  out('w', `TKT-${t.eticket || '000-0000000000'}`);
+  nl();
+  out('d', rpad('DATE', 12) + rpad('ACTION', 18) + rpad('AGENT', 14) + 'DETAIL');
+  out('d', '─'.repeat(70));
+  out('w', rpad(pnr.created || todayFmt(), 12) + rpad('ORIGINAL ISSUE', 18) + rpad('AA/SU', 14) + (t.currency + t.total.toFixed(2)));
+  if (pnr.status === 'REFUNDED') {
+    out('r', rpad(todayFmt(), 12) + rpad('REFUNDED', 18) + rpad('AA/SU', 14) + 'FULL REFUND PROCESSED');
+  }
+  if (pnr.status === 'EXCHANGED') {
+    out('y', rpad(todayFmt(), 12) + rpad('EXCHANGED', 18) + rpad('AA/SU', 14) + 'REISSUE - ' + (t.newEticket || '---'));
+  }
+  nl();
+  out('d', '--- END HISTORY ---');
+  nl();
+}
+
+/* ── renderTwdView — Update TWD Tab ─────────────────────────────────────── */
+function renderTwdView(t, mode) {
+  const panel = document.getElementById('twd-view');
+  if (!t) {
+    panel.innerHTML = `<div class="ln d" style="padding:20px 0;text-align:center">NO E-TICKET ON DISPLAY — USE TWD OR TWD/Ln</div>`;
+    return;
+  }
+  const loc   = pnr?.locator || '------';
+  const tkt   = t.eticket || '000-0000000000';
+  const segs  = pnr?.itinerary || [];
+  const doi   = pnr?.created || todayFmt();
+  const odFrom = segs[0]?.from || '???';
+  const odTo   = segs.slice(-1)[0]?.to || '???';
+
+  if (mode === 'TAX') {
+    const taxAmt = t.taxes;
+    const yq = +(taxAmt * 0.50).toFixed(2);
+    const eg = +(taxAmt * 0.25).toFixed(2);
+    const yr = +(taxAmt - yq - eg).toFixed(2);
+    panel.innerHTML = `
+      <div class="ln c" style="margin-bottom:6px">TKT-${tkt}  TAX/FEE DETAIL</div>
+      <div class="ln d" style="margin-bottom:4px">${rpad('TAX',8)}${rpad('AMOUNT',12)}${rpad('CURRENCY',10)}DESCRIPTION</div>
+      <div class="ln d">${'─'.repeat(56)}</div>
+      <div class="ln w">EG      ${rpad(eg.toFixed(2),12)}${rpad(t.currency,10)}EGYPT DEPARTURE TAX</div>
+      <div class="ln w">YQ      ${rpad(yq.toFixed(2),12)}${rpad(t.currency,10)}CARRIER SURCHARGE</div>
+      <div class="ln w">YR      ${rpad(yr.toFixed(2),12)}${rpad(t.currency,10)}CARRIER IMPOSED FEE</div>
+      <div class="ln d">${'─'.repeat(32)}</div>
+      <div class="ln am">TOTAL   ${rpad(taxAmt.toFixed(2),12)}${t.currency}</div>`;
+    return;
+  }
+
+  const segRows = segs.map((s, i) => {
+    const st = pnr?.status === 'TICKETED' ? '<span class="ln g">O </span>' : '<span class="ln y">O </span>';
+    return `<div class="ln w">ST  ${i+1} O${s.from} <span class="ln am">${s.airline}</span> ${String(s.flight).padEnd(4)} ${s.class} ${(s.date||'OPEN').padEnd(8)}${s.dep||'----'}  ${st}<span class="ln y">${rpad(t.fareBasis||'YOW',12)}</span>O  ${s.date||'OPEN'} ${s.date||'OPEN'}  20K</div>
+            <div class="ln d" style="padding-left:20px">${s.from.padEnd(24)}${s.to}</div>`;
+  }).join('');
+
+  const calcSegs = segs.map((s, i) => {
+    return i === 0 ? `${s.from} ${s.airline} ${s.to} Q20.00 ${(t.baseFare/Math.max(segs.length,1)).toFixed(2)}` :
+                     `${s.airline} ${s.to} Q20.00 ${(t.baseFare/Math.max(segs.length,1)).toFixed(2)}`;
+  }).join('');
+
+  panel.innerHTML = `
+    <div class="ln c"  style="margin-bottom:2px">TKT-${tkt}     RCI- 1A  LOC-${loc}</div>
+    <div class="ln w">OD-${odFrom}${odTo}  SI-         FCPI-0</div>
+    <div class="ln w">POI-${odFrom}  DOI-${doi}   IOI-${Math.floor(Math.random()*90000000+10000000)}</div>
+    <br>
+    <div class="ln w">1.${t.paxName.padEnd(40)}${t.ptc}</div>
+    ${segRows}
+    <br>
+    <div class="ln w">${rpad('FARE  F  '+t.currency,20)}${lpad(t.baseFare.toFixed(2),14)}</div>
+    <div class="ln w">${rpad('EQUIV    '+t.currency,20)}${lpad(t.baseFare.toFixed(2),14)}</div>
+    <div class="ln w">${rpad('TOTALTAX '+t.currency,20)}${lpad(t.taxes.toFixed(2),14)}</div>
+    <div class="ln am">${rpad('TOTAL    '+t.currency,20)}${lpad(t.total.toFixed(2),14)}</div>
+    <br>
+    <div class="ln w">/FC ${calcSegs}NUC${t.baseFare.toFixed(2)}END ROE1.00</div>
+    <div class="ln w">FP  ${t.fop||'CASH'}</div>
+    <div class="ln w">FE  ${t.endorsement||'NONREF/RESTR APPLY'}</div>
+    <br>
+    <div class="ln d">FOR TAX/FEE DETAILS USE TWD/TAX  |  COUPON STATUS: ${pnr?.status==='TICKETED'?'<span class="ln g">OPEN</span>':'<span class="ln y">CONFIRMED</span>'}</div>
+  `;
+}
+
+/* ── TDN / TTE — Delete TST ─────────────────────────────────────────────── */
+function cmdTdn() {
+  if (!pnr?.tst?.length) { out('y', 'NO TST ON FILE'); nl(); return; }
+  pnr.tst = [];
+  out('g', 'TST(S) DELETED');
+  nl();
+  renderTstView();
+}
+function cmdTte(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (!pnr.tst?.length) { out('y', 'NO TST ON FILE'); nl(); return; }
+  // TTE/T{n}
+  const tm = cmd && cmd.match(/\/T(\d+)/);
+  if (tm) {
+    const idx = parseInt(tm[1]) - 1;
+    if (idx < 0 || idx >= pnr.tst.length) { out('r', 'TST NOT FOUND'); nl(); return; }
+    pnr.tst.splice(idx, 1);
+    out('g', 'TST ' + tm[1] + ' DELETED');
+  } else {
+    pnr.tst = [];
+    out('g', 'ALL TST(S) DELETED');
+  }
+  nl();
+  renderTstView();
+}
+
+/* ── FQN — Fare Rules with pagination ──────────────────────────────────── */
+function cmdFqn(cmd) {
+  const m = cmd.match(/^FQN(\d+)(\*([A-Z]{2}))?/);
+  if (!m) { out('r', 'FORMAT: FQN1  or  FQN1*PE'); nl(); return; }
+  const lineNum  = parseInt(m[1]);
+  const category = m[3] || null;
+
+  // Resolve fare info: first try lastFares, then TST, then defaults
+  let al = 'MS', cls = 'Y', basis = 'YOWEGB', from = 'CAI', to = 'LOR';
+
+  if (pnr?.itinerary?.[0]) {
+    al   = pnr.itinerary[0].airline || al;
+    cls  = pnr.itinerary[0].class   || cls;
+    from = pnr.itinerary[0].from    || from;
+    to   = (pnr.itinerary.slice(-1)[0]?.to) || to;
+  }
+  if (pnr?.tst?.length) {
+    basis = pnr.tst[0].fareBasis || basis;
+    cls   = basis[0] || cls;
+  }
+  if (lastFares.length && lastFares[lineNum - 1]) {
+    const lf = lastFares[lineNum - 1];
+    al    = lf.airline   || al;
+    basis = lf.fare_basis|| basis;
+    cls   = lf.cabin     || cls;
+  }
+
+  const isFlexible   = ['Y','B','M','C','J','F'].includes(cls);
+  const isRestricted = ['Q','K','L','U','T','V'].includes(cls);
+
+  // Build all pages
+  const allPages = buildFqnPages(al, cls, basis, from, to, isFlexible, isRestricted);
+
+  // If category filter — find matching pages
+  let pages = allPages;
+  if (category) {
+    const catMap = { PE: 'PENALTIES', AP: 'ADVANCE PURCHASE', SR: 'STOPOVERS',
+                     LI: 'CATEGORY LIST', CO: 'COMBINABILITY', DT: 'DATE/DAY RESTRICTIONS',
+                     FL: 'FLIGHT APPLICATION', BK: 'BLACKOUT DATES', RF: 'REFUNDS' };
+    const catTitle = catMap[category] || category;
+    pages = allPages.filter(p => p.title && p.title.includes(catTitle));
+    if (!pages.length) pages = allPages.slice(0, 3); // fallback
+  }
+
+  fqnPages    = pages;
+  fqnCurPage  = 0;
+
+  // Terminal: show header + first page
+  const catLabel = category ? '*' + category : '';
+  out('am', `FQN${lineNum}${catLabel}`);
+  nl();
+  out('w', `** RULES DISPLAY **  ${todayFmt()}**${todayFmt()}/${al}  ${from}${to}/NSP;EH`);
+  out('d', '─'.repeat(72));
+  nl();
+  fqnPages[0].lines.forEach(l => out(l.c || 'w', l.t));
+  nl();
+  if (fqnPages.length > 1) {
+    out('d', `--- PAGE 1/${fqnPages.length} ---   ENTER MD FOR NEXT PAGE  |  MU FOR PREVIOUS`);
+  } else {
+    out('d', '--- END OF RULES ---');
+  }
+  nl();
+  // Update F6 tab silently in background
+  renderFqnView();
+}
+
+function buildFqnPages(al, cls, basis, from, to, isFlexible, isRestricted) {
+  return [
+    {
+      title: 'CATEGORY LIST',
+      lines: [
+        { t: `FCL: ${basis}  TRF: 21  RULE: ${cls}OW1  BK: ${cls}` },
+        { t: `PTC: ADT-ADULT  FTC: NX-${isFlexible ? 'FULL FLEXIBILITY EXCURSION' : 'NONREFUNDABLE EXCURSION'}` },
+        { t: '' },
+        { t: 'FARE FAMILY: ECONOMY ' + (isFlexible ? 'FLEX' : 'BASIC') },
+        { t: '' },
+        { t: 'CATEGORIES FILED IN THIS RULE:', c: 'am' },
+        { t: '  01  RULE APPLICATION AND OTHER CONDITIONS' },
+        { t: '  03  ACCOMPANIED TRAVEL' },
+        { t: '  04  CHILDREN/INFANT DISCOUNTS' },
+        { t: '  06  ADVANCE PURCHASE' },
+        { t: '  07  MINIMUM STAY' },
+        { t: '  08  MAXIMUM STAY' },
+        { t: '  09  SALES RESTRICTIONS' },
+        { t: '  10  TRAVEL RESTRICTIONS/BLACKOUT DATES' },
+        { t: '  15  PENALTIES' },
+        { t: '  16  TRANSFERS/ROUTING' },
+        { t: '  18  TICKET ENDORSEMENTS' },
+        { t: '  35  NEGOTIATED FARES' },
+        { t: '' },
+        { t: 'TO VIEW A SPECIFIC CATEGORY ENTER FQN1*PE (PENALTY)', c: 'd' },
+      ]
+    },
+    {
+      title: 'RULE APPLICATION AND OTHER CONDITIONS',
+      lines: [
+        { t: '01.RULE APPLICATION AND OTHER CONDITIONS', c: 'am' },
+        { t: '' },
+        { t: 'UNLESS OTHERWISE SPECIFIED' },
+        { t: `  FARES IN THIS RULE APPLY ON ${al} OPERATED AND MARKETED FLIGHTS` },
+        { t: `  FROM ${from} TO ${to}` },
+        { t: '' },
+        { t: 'FARE COMPONENT APPLIES FOR' },
+        { t: '  ONE-WAY JOURNEYS' },
+        { t: '' },
+        { t: isFlexible
+            ? 'FARE IS FULLY FLEXIBLE — CHANGES AND REFUNDS PERMITTED'
+            : 'FARE IS RESTRICTED — SEE PENALTIES (CAT 15) FOR CONDITIONS' },
+        { t: '' },
+        { t: 'STANDBY NOT APPLICABLE' },
+        { t: 'POINT OF SALE: CAI — MUST BE SOLD IN EGYPT' },
+      ]
+    },
+    {
+      title: 'CHILDREN/INFANT DISCOUNTS',
+      lines: [
+        { t: '04.CHILDREN/INFANT DISCOUNTS', c: 'am' },
+        { t: '' },
+        { t: 'ACCOMPANIED CHILD (CHD) AGE 2-11 YEARS' },
+        { t: '  DISCOUNT: 25 PERCENT OF ADULT FARE' },
+        { t: '  MUST TRAVEL WITH ADULT' },
+        { t: '' },
+        { t: 'INFANT WITHOUT SEAT (INF) AGE 0-23 MONTHS' },
+        { t: '  DISCOUNT: 90 PERCENT OF ADULT FARE' },
+        { t: '  MUST TRAVEL WITH ADULT' },
+        { t: '' },
+        { t: 'INFANT WITH SEAT (INF) AGE 0-23 MONTHS' },
+        { t: '  DISCOUNT: 25 PERCENT OF ADULT FARE' },
+        { t: '  MUST TRAVEL WITH ADULT' },
+      ]
+    },
+    {
+      title: 'ADVANCE PURCHASE',
+      lines: [
+        { t: '06.ADVANCE PURCHASE', c: 'am' },
+        { t: '' },
+        { t: isRestricted ? 'TICKETING MUST BE COMPLETED AT LEAST:' : 'NO ADVANCE PURCHASE REQUIREMENT' },
+        ...(isRestricted ? [
+          { t: '  7 DAYS BEFORE DEPARTURE FOR ALL FARES' },
+          { t: '' },
+          { t: 'TICKETS NOT ISSUED WITHIN REQUIRED TIME:' },
+          { t: '  FARE WILL BE REPRICED AT TIME OF TICKETING' },
+        ] : []),
+        { t: '' },
+        { t: 'NOTE - ADVANCE PURCHASE MEASURED FROM DATE OF' },
+        { t: '  COMMENCEMENT OF TRAVEL' },
+      ]
+    },
+    {
+      title: 'MINIMUM/MAXIMUM STAY',
+      lines: [
+        { t: '07.MINIMUM STAY', c: 'am' },
+        { t: '' },
+        { t: isRestricted
+            ? 'MINIMUM STAY REQUIRED: SATURDAY NIGHT AT DESTINATION OR\n  RETURN TRAVEL MINIMUM 7 DAYS AFTER DEPARTURE'
+            : 'NO MINIMUM STAY REQUIREMENT' },
+        { t: '' },
+        { t: '08.MAXIMUM STAY', c: 'am' },
+        { t: '' },
+        { t: '  MAXIMUM STAY: 1 YEAR FROM DATE OF FIRST OUTBOUND TRAVEL' },
+        { t: '' },
+        { t: 'NOTE - IF REROUTING RESULTS IN EXCEEDING MAXIMUM STAY' },
+        { t: '  FARE DIFFERENCE APPLIES' },
+      ]
+    },
+    {
+      title: 'PENALTIES',
+      lines: [
+        { t: `PE.PENALTIES FOR ${basis} TYPE FARES`, c: 'am' },
+        { t: '' },
+        { t: 'CANCELLATIONS', c: 'am' },
+        { t: isFlexible ? '  ANY TIME' : '  ANY TIME' },
+        { t: isFlexible
+            ? '    TICKET IS FULLY REFUNDABLE.'
+            : '    TICKET IS NON-REFUNDABLE.' },
+        { t: '    WAIVED FOR DEATH OF PASSENGER OR IMMEDIATE FAMILY MEMBER.' },
+        { t: '    NOTE - DEATH CERTIFICATE REQUIRED.' },
+        { t: '' },
+        { t: 'CHANGES', c: 'am' },
+        { t: '  BEFORE DEPARTURE' },
+        { t: isFlexible
+            ? '    CHANGES PERMITTED WITHOUT PENALTY.'
+            : '    CHARGE EGP 500.00 PER PERSON PER CHANGE FOR REISSUE.' },
+        { t: '    WAIVED FOR INVOLUNTARY CHANGES (SCHEDULE CHANGE/CANCELLATION).' },
+        { t: '  AFTER DEPARTURE' },
+        { t: isFlexible
+            ? '    CHANGES PERMITTED. FARE DIFFERENCE APPLIES.'
+            : '    CHARGE EGP 750.00 PER PERSON PER CHANGE FOR REISSUE.' },
+        { t: '    WAIVED FOR DEATH OF PASSENGER OR IMMEDIATE FAMILY MEMBER.' },
+        { t: '' },
+        { t: 'NO SHOW', c: 'am' },
+        { t: isFlexible
+            ? '    CHARGE EGP 200.00 NO-SHOW FEE.'
+            : '    CHARGE EGP 1000.00 OR FARE WHICHEVER IS HIGHER.' },
+        { t: '    TICKET FORFEITED IF NOT CANCELLED BEFORE DEPARTURE.' },
+        { t: '' },
+        { t: 'UPGRADES/REROUTING', c: 'am' },
+        { t: '  SUBJECT TO AVAILABILITY AND FARE DIFFERENCE.' },
+        { t: '  CHANGE FEE APPLIES IN ADDITION TO FARE DIFFERENCE.' },
+      ]
+    },
+    {
+      title: 'STOPOVERS AND TRANSFERS',
+      lines: [
+        { t: '16.STOPOVERS', c: 'am' },
+        { t: '' },
+        { t: 'STOPOVERS' },
+        { t: '  NOT PERMITTED ON ONE-WAY (OW) FARES' },
+        { t: '  1 FREE STOPOVER PERMITTED ON ROUND TRIP (RT) FARES' },
+        { t: '  ADDITIONAL STOPOVERS: USD 50.00 EACH' },
+        { t: '' },
+        { t: 'TRANSFERS' },
+        { t: `  ${al} ONLINE CONNECTIONS PERMITTED AT NO CHARGE` },
+        { t: '  INTERLINE CONNECTIONS: SUBJECT TO THROUGH FARE RULES' },
+        { t: '' },
+        { t: 'ROUTING' },
+        { t: `  MUST BE ROUTED VIA ${al} OPERATED FLIGHTS` },
+        { t: '  STOPOVERS EXCEEDING 24 HOURS COUNT AS A STOPOVER' },
+      ]
+    },
+    {
+      title: 'TICKET ENDORSEMENTS AND COMBINABILITY',
+      lines: [
+        { t: '18.TICKET ENDORSEMENTS', c: 'am' },
+        { t: '' },
+        { t: isFlexible
+            ? `  ENDORSEMENTS: REFUNDABLE/CHANGEABLE/${al} ONLY`
+            : `  ENDORSEMENTS: NONENDO/NON-REF/${al} ONLY` },
+        { t: `  FARE IS VALID ONLY ON TICKET WITH VALIDATING CARRIER: ${al}` },
+        { t: '' },
+        { t: '35.COMBINABILITY', c: 'am' },
+        { t: '' },
+        { t: '  COMBINABILITY: PERMITTED WITH' },
+        { t: `    ${al} PUBLISHED ONE-WAY FARES` },
+        { t: '    SPECIAL FARES — END-ON-END COMBINATIONS PERMITTED' },
+        { t: '' },
+        { t: '  HIGHER INTERMEDIATE POINT RULE APPLIES' },
+        { t: '  BACKHAUL CHECK APPLIES' },
+      ]
+    },
+  ];
+}
+
+function renderFqnView() {
+  const nav   = document.getElementById('fqn-nav');
+  const panel = document.getElementById('fqn-view');
+  if (!fqnPages.length) {
+    panel.innerHTML = `<div class="ln d" style="padding:20px 0;text-align:center">NO FARE RULES — USE FQN1 OR FQN1*PE</div>`;
+    nav.style.display = 'none';
+    return;
+  }
+  nav.style.display = 'flex';
+  updateFqnPage();
+}
+
+function updateFqnPage() {
+  const panel = document.getElementById('fqn-view');
+  const info  = document.getElementById('fqn-page-info');
+  const page  = fqnPages[fqnCurPage];
+  if (!page) return;
+  info.textContent = `PAGE ${fqnCurPage + 1} / ${fqnPages.length}`;
+  let html = '';
+  page.lines.forEach(l => {
+    const cls = l.c || 'w';
+    html += `<div class="ln ${cls}">${l.t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>`;
+  });
+  if (fqnCurPage < fqnPages.length - 1) {
+    html += `<br><div class="ln d">--- PAGE ${fqnCurPage+1}/${fqnPages.length} ---  ENTER MD FOR NEXT PAGE</div>`;
+  } else {
+    html += `<br><div class="ln g">--- END OF RULES ---</div>`;
+  }
+  panel.innerHTML = html;
+}
+
+function fqnPageNext() {
+  if (!fqnPages.length) { out('d', 'NO RULES ON DISPLAY'); nl(); return; }
+  if (fqnCurPage < fqnPages.length - 1) {
+    fqnCurPage++;
+    updateFqnPage();
+    const page = fqnPages[fqnCurPage];
+    out('d', `--- PAGE ${fqnCurPage+1}/${fqnPages.length}: ${page.title || ''} ---`);
+    nl();
+    page.lines.forEach(l => out(l.c || 'w', l.t));
+    nl();
+    if (fqnCurPage < fqnPages.length - 1) {
+      out('d', 'ENTER MD FOR NEXT PAGE  |  MU FOR PREVIOUS PAGE');
+    } else {
+      out('g', '--- END OF RULES ---');
+    }
+    nl();
+  } else {
+    out('g', '--- END OF RULES DISPLAY ---');
+    nl();
+  }
+}
+
+function fqnPagePrev() {
+  if (!fqnPages.length) { out('d', 'NO RULES ON DISPLAY'); nl(); return; }
+  if (fqnCurPage > 0) {
+    fqnCurPage--;
+    updateFqnPage();
+    out('d', `--- PAGE ${fqnCurPage+1}/${fqnPages.length} ---`);
+    nl();
+  } else {
+    out('y', '--- FIRST PAGE ---');
+    nl();
+  }
+}
+
+function fqnPageFirst() {
+  fqnCurPage = 0;
+  updateFqnPage();
+}
+
+/* ── SPLIT SCREEN ────────────────────────────────────────────────────────── */
+function cmdSplit(enable) {
+  splitMode = enable;
+  const left  = document.getElementById('split-left');
+  const right = document.getElementById('split-right');
+  const label = document.getElementById('split-left-label');
+  const bar   = document.getElementById('split-compare-bar');
+  const btnS  = document.getElementById('btn-single');
+  const btnD  = document.getElementById('btn-split');
+
+  // Update toolbar button states
+  if (btnS) btnS.classList.toggle('active', !enable);
+  if (btnD) btnD.classList.toggle('active', enable);
+
+  if (enable) {
+    right.style.display = 'flex';
+    label.style.display = 'block';
+    bar.style.display   = 'block';
+
+    // Populate left pane with current TWD / old ticket snapshot
+    const oR = document.getElementById('output-right');
+    oR.innerHTML = '';
+    if (pnr?.tst?.length) {
+      const t = pnr.tst[0];
+      // Snapshot old ticket into left side label
+      const oL = document.getElementById('output');
+      // Push TWD snapshot lines to left (they stay as current output)
+      // Print old ticket snapshot to right (as starting reference)
+      const makeDiv = (cls, txt) => {
+        const d = document.createElement('div');
+        d.className = 'ln ' + cls;
+        d.textContent = txt;
+        return d;
+      };
+      oR.appendChild(makeDiv('am', '--- OLD TICKET SNAPSHOT ---'));
+      oR.appendChild(makeDiv('c', `TKT-${t.eticket || '000-0000000000'}  LOC-${pnr.locator || '---'}`));
+      oR.appendChild(makeDiv('w', `PAX: ${t.paxName}`));
+      (pnr.itinerary || []).forEach(s => {
+        oR.appendChild(makeDiv('w', `${s.airline}${s.flight} ${s.class} ${s.date||''} ${s.from}-${s.to}`));
+      });
+      oR.appendChild(makeDiv('w', ''));
+      oR.appendChild(makeDiv('d', rpad('FARE  ' + t.currency, 16) + lpad(t.baseFare.toFixed(2), 12)));
+      oR.appendChild(makeDiv('d', rpad('TAXES ' + t.currency, 16) + lpad(t.taxes.toFixed(2), 12)));
+      oR.appendChild(makeDiv('am',rpad('TOTAL ' + t.currency, 16) + lpad(t.total.toFixed(2), 12)));
+      oR.appendChild(makeDiv('w', 'FP: ' + (t.fop || 'CASH')));
+      oR.appendChild(makeDiv('w', ''));
+      oR.appendChild(makeDiv('y', 'AWAITING NEW TST — RUN FXP ON NEW SEGMENTS'));
+
+      // Update compare bar
+      document.getElementById('sc-old').textContent = t.currency + ' ' + t.total.toFixed(2);
+      document.getElementById('sc-new').textContent = '—';
+      document.getElementById('sc-adc').textContent = '—';
+      document.getElementById('sc-pen').textContent = '—';
+      document.getElementById('sc-tot').textContent = '—';
+    } else {
+      oR.appendChild((() => { const d = document.createElement('div'); d.className = 'ln y'; d.textContent = 'NO TST ON FILE FOR COMPARISON'; return d; })());
+    }
+
+    out('g', 'SPLIT SCREEN ENABLED');
+    out('d', 'LEFT: ORIGINAL TICKET   |   RIGHT: NEW TST (run FXP for new segments)');
+    out('d', 'ENTER SPLIT/OFF TO RETURN TO SINGLE SCREEN');
+  } else {
+    right.style.display = 'none';
+    label.style.display = 'none';
+    bar.style.display   = 'none';
+    out('g', 'SPLIT SCREEN DISABLED — SINGLE SCREEN MODE');
+  }
+  nl();
+}
+
+/* ── FXQ — Exchange Fare Quote ──────────────────────────────────────────── */
+async function cmdFxq(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (!pnr.tst?.length) { out('y', 'NO TST ON FILE — PRICE NEW ITINERARY FIRST WITH FXP'); nl(); return; }
+
+  const newTst   = pnr.tst[0];
+  const oldTotal = pnr.originalTotal || newTst.total * 0.85; // simulate old ticket
+  const newTotal = newTst.total;
+  const diff     = +(newTotal - oldTotal).toFixed(2);
+  const penalty  = +(newTotal * 0.08).toFixed(2);
+  const totalCollect = +(Math.max(diff, 0) + penalty).toFixed(2);
+
+  out('am', '--- ATC EXCHANGE QUOTE ---');
+  nl();
+  out('d', rpad('ITEM', 30) + rpad(newTst.currency, 8) + 'AMOUNT');
+  out('d', '─'.repeat(56));
+  out('w', rpad('OLD FARE (ORIGINAL TICKET)', 30) + rpad(newTst.currency, 8) + lpad(oldTotal.toFixed(2), 10));
+  out('w', rpad('NEW FARE (REPRICED)', 30) + rpad(newTst.currency, 8) + lpad(newTotal.toFixed(2), 10));
+  out('d', '─'.repeat(56));
+  const adcColor = diff > 0 ? 'am' : 'g';
+  out(adcColor, rpad('ADDITIONAL COLLECTION (ADC)', 30) + rpad(newTst.currency, 8) + lpad(Math.max(diff,0).toFixed(2), 10));
+  out('w', rpad('CHANGE PENALTY', 30) + rpad(newTst.currency, 8) + lpad(penalty.toFixed(2), 10));
+  out('d', '─'.repeat(56));
+  out('am', rpad('TOTAL TO COLLECT', 30) + rpad(newTst.currency, 8) + lpad(totalCollect.toFixed(2), 10));
+  nl();
+  out('d', 'ENTER TQR TO VIEW FULL REISSUE PANEL');
+  out('d', 'ENTER TTK/R' + Math.max(diff,0).toFixed(2) + '/T' + newTotal.toFixed(2) + ' TO SET EXCHANGE AMOUNTS');
+  nl();
+
+  // Update split compare bar if active
+  if (splitMode) {
+    document.getElementById('sc-new').textContent = newTst.currency + ' ' + newTotal.toFixed(2);
+    document.getElementById('sc-adc').textContent = newTst.currency + ' ' + Math.max(diff,0).toFixed(2);
+    document.getElementById('sc-pen').textContent = newTst.currency + ' ' + penalty.toFixed(2);
+    document.getElementById('sc-tot').textContent = newTst.currency + ' ' + totalCollect.toFixed(2);
+  }
+
+  // Store for TTK
+  pnr._exchange = { oldTotal, newTotal, adc: Math.max(diff,0), penalty, totalCollect, currency: newTst.currency };
+}
+
+/* ── TQR — ATC Reissue Panel ────────────────────────────────────────────── */
+function cmdTqr() {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (!pnr._exchange) { out('y', 'RUN FXQ FIRST TO CALCULATE EXCHANGE AMOUNTS'); nl(); return; }
+  const ex = pnr._exchange;
+  out('am', '--- ATC REISSUE PANEL ---');
+  nl();
+  out('w', `TST NR: ${lpad(1,'0',3)}   PAX: ${pnr.passengers[0] ? pnr.passengers[0].last + '/' + pnr.passengers[0].first : '---'}`);
+  out('w', `EXCHANGE MODE: VOLUNTARY REISSUE`);
+  nl();
+  out('d', rpad('OLD FARE BASIS', 24) + rpad('OLD TOTAL', 14) + rpad('NEW FARE BASIS', 16) + 'NEW TOTAL');
+  out('w', rpad((pnr._oldFareBasis || pnr.tst[0]?.fareBasis || 'YOW'), 24) +
+           rpad(ex.currency + ' ' + ex.oldTotal.toFixed(2), 14) +
+           rpad(pnr.tst[0]?.fareBasis || 'YOWEGB', 16) +
+           ex.currency + ' ' + ex.newTotal.toFixed(2));
+  nl();
+  out('d', '─'.repeat(64));
+  out('w', rpad('ADC', 30) + ex.currency + ' ' + lpad(ex.adc.toFixed(2), 10));
+  out('w', rpad('CHANGE PENALTY', 30) + ex.currency + ' ' + lpad(ex.penalty.toFixed(2), 10));
+  out('am', rpad('TOTAL CHARGE', 30) + ex.currency + ' ' + lpad(ex.totalCollect.toFixed(2), 10));
+  nl();
+  out('d', 'FORM OF PAYMENT : ' + (pnr.fop || 'NOT ENTERED — USE FP CASH'));
+  out('d', 'OLD TICKET FOP  : ' + (pnr.fpo || 'NOT ENTERED — USE FPO/CASH+/CASH'));
+  nl();
+  out('y', 'NEXT STEPS:');
+  out('d', '  1. FP CASH (or credit card)');
+  out('d', '  2. FPO/CASH+/CASH (old ticket FOP + new FOP)');
+  out('d', '  3. TTP/EXCH (issue exchange ticket)');
+  nl();
+}
+
+/* ── TTK — Update TST for Exchange ─────────────────────────────────────── */
+function cmdTtk(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+
+  // TTK/EXCH/T{n}
+  if (/\/EXCH/i.test(cmd)) {
+    const tn = cmd.match(/\/T(\d+)/);
+    const idx = tn ? parseInt(tn[1]) - 1 : 0;
+    if (!pnr.tst?.[idx]) { out('r', 'TST NOT FOUND'); nl(); return; }
+    pnr.tst[idx].exchangeMode = true;
+    out('g', `TST ${idx + 1} SET TO EXCHANGE MODE`);
+    out('d', 'ENTER TTK/R{ADC}/T{TOTAL} TO SET AMOUNTS');
+    nl();
+    return;
+  }
+
+  // TTK/R{adc}/T{total}
+  const rtM = cmd.match(/\/R([\d.]+)\/T([\d.]+)/);
+  if (rtM) {
+    const adc   = parseFloat(rtM[1]);
+    const total = parseFloat(rtM[2]);
+    if (!pnr.tst?.[0]) { out('r', 'NO TST ON FILE'); nl(); return; }
+    pnr.tst[0].exchangeAdc   = adc;
+    pnr.tst[0].total         = total;
+    pnr.tst[0].exchangeMode  = true;
+    out('g', `TST UPDATED — ADC: ${pnr.tst[0].currency} ${adc.toFixed(2)}  NEW TOTAL: ${pnr.tst[0].currency} ${total.toFixed(2)}`);
+    nl();
+    renderTstView();
+    return;
+  }
+
+  // TTK/T0.00 — zero ADC
+  if (/\/T0(\.00)?/.test(cmd)) {
+    if (pnr.tst?.[0]) { pnr.tst[0].exchangeAdc = 0; }
+    out('g', 'ADC SET TO ZERO — NO ADDITIONAL COLLECTION');
+    nl();
+    return;
+  }
+
+  out('r', 'FORMAT: TTK/EXCH/T1  or  TTK/R500/T6100  or  TTK/T0.00');
+  nl();
+}
+
+/* ── FHE — Historical Ticket Element ───────────────────────────────────── */
+function cmdFhe(raw) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  const tktNum = raw.replace(/^FHE\s*/i, '').trim().toUpperCase();
+  if (!tktNum) { out('r', 'FORMAT: FHE 077-1234567890'); nl(); return; }
+  pnr._fhe = tktNum;
+  pnr.originalTotal = pnr.tst?.[0]?.total ? pnr.tst[0].total * 0.85 : 0; // simulate
+  out('g', `FHE ELEMENT ADDED — ORIGINAL TICKET: ${tktNum}`);
+  out('d', 'USE FXQ TO CALCULATE EXCHANGE AMOUNTS');
+  nl();
+}
+
+/* ── FP — Form of Payment ───────────────────────────────────────────────── */
+function cmdFp(raw) {
+  if (!pnr) initPnr();
+  const val = raw.replace(/^FP\s+/i, '').trim().toUpperCase();
+  pnr.fop = val;
+  if (pnr.tst?.length) pnr.tst.forEach(t => t.fop = val);
+  out('g', 'FORM OF PAYMENT: ' + val);
+  nl();
+}
+
+/* ── FV — Validating Carrier ────────────────────────────────────────────── */
+function cmdFv(raw) {
+  if (!pnr) initPnr();
+  const val = raw.replace(/^FV\s+/i, '').trim().toUpperCase();
+  pnr.validatingCarrier = val;
+  out('g', 'VALIDATING CARRIER: ' + val);
+  nl();
+}
+
+/* ── FE — Fare Endorsement ──────────────────────────────────────────────── */
+function cmdFe(raw) {
+  if (!pnr) initPnr();
+  const val = raw.replace(/^FE\s+/i, '').trim().toUpperCase();
+  pnr.endorsement = val;
+  if (pnr.tst?.length) pnr.tst.forEach(t => t.endorsement = val);
+  out('g', 'ENDORSEMENT: ' + val);
+  nl();
+}
+
+/* ── FM — Commission ────────────────────────────────────────────────────── */
+function cmdFm(raw) {
+  if (!pnr) initPnr();
+  const val = raw.replace(/^FM\s+/i, '').trim().toUpperCase();
+  pnr.commission = val;
+  out('g', 'COMMISSION: ' + val + (val.includes('%') ? '' : '%'));
+  nl();
+}
+
+/* ── FPO — Old/New FOP for Exchange ────────────────────────────────────── */
+function cmdFpo(raw) {
+  if (!pnr) initPnr();
+  const val = raw.replace(/^FPO\//i, '').trim().toUpperCase();
+  pnr.fpo = val;
+  const parts = val.split('+');
+  out('g', 'FPO ENTERED — OLD FOP: ' + (parts[0] || '?') + '  NEW FOP: ' + (parts[1] || '?'));
+  out('d', 'ENTER TTP/EXCH TO ISSUE EXCHANGE TICKET');
+  nl();
+}
+
+/* ── renderTstView — Update TST Tab ─────────────────────────────────── */
+function renderTstView() {
+  const panel = document.getElementById('tst-view');
+  if (!pnr || !pnr.tst || !pnr.tst.length) {
+    panel.innerHTML = `<div class="ln d" style="padding:20px 0;text-align:center">NO TST ON FILE — USE FXP TO CREATE A TRANSITIONAL STORED TICKET</div>`;
+    return;
+  }
+
+  const segs = pnr.itinerary?.filter(s => s.status !== 'XX') || [];
+  let html = `<div class="ln am tst-hdr">*TST* — ${pnr.locator || 'WORKING PNR'}  /  ${pnr.tst.length} TST(S) ON FILE</div><br>`;
+
+  pnr.tst.forEach(t => {
+    const exchBadge = t.exchangeMode ? `<span class="ln y" style="margin-left:12px">** EXCHANGE MODE **</span>` : '';
+    const segRows = segs.map(s => `
+      <div class="tst-row">
+        <span class="ln am" style="min-width:60px">${s.airline}${s.flight}</span>
+        <span class="ln w" style="min-width:30px">${s.class}</span>
+        <span class="ln w" style="min-width:80px">${s.date||'OPEN'}</span>
+        <span class="ln y" style="min-width:130px">${t.fareBasis||'YOW'}</span>
+        <span class="ln d" style="min-width:80px">${s.date||'OPEN'}</span>
+        <span class="ln d" style="min-width:80px">${s.date||'OPEN'}</span>
+        <span class="ln d">20K</span>
+      </div>`).join('');
+
+    const calcLine = segs.map((s, i) =>
+      i === 0 ? `${s.from} ${s.airline} ${s.to} Q20.00 ${(t.baseFare/Math.max(segs.length,1)).toFixed(2)}`
+              : `${s.airline} ${s.to} Q20.00 ${(t.baseFare/Math.max(segs.length,1)).toFixed(2)}`
+    ).join('');
+
+    const ttlDate = new Date(); ttlDate.setDate(ttlDate.getDate() + 3);
+    const ttlStr = `${pad(ttlDate.getDate())}${MO[ttlDate.getMonth()]}${ttlDate.getFullYear()}`;
+
+    html += `
+    <div class="tst-block">
+      <div class="ln am" style="margin-bottom:6px">TST NR ${String(t.id).padStart(3,'0')}  PAX NR ${String(t.paxNum).padStart(3,'0')} / ${t.paxName} (${t.ptc})${exchBadge}</div>
+      <div class="ln d" style="font-size:11px;margin-bottom:2px">  AL  FLT  BK  DATE    FARE BASIS    NVB      NVA      BG</div>
+      <div style="border-left:2px solid var(--border);padding-left:8px;margin-bottom:6px">${segRows}</div>
+      <div class="ln d2" style="margin:4px 0">${'─'.repeat(56)}</div>
+      <div class="ln w" style="margin-bottom:4px;font-size:11.5px">  ${t.currency}  ${t.baseFare.toFixed(2)}  ${calcLine}NUC${t.baseFare.toFixed(2)}END ROE1.00</div>
+      <div class="ln d2" style="margin:4px 0">${'─'.repeat(56)}</div>
+      <div class="tst-row"><span class="ln d tst-lbl">FARE AMOUNT      :</span><span class="ln w">${t.currency} ${t.baseFare.toFixed(2)}</span></div>
+      <div class="tst-row"><span class="ln d tst-lbl">TAX / SURCHARGES :</span><span class="ln w">${t.currency} ${t.taxes.toFixed(2)}</span></div>
+      ${t.exchangeAdc !== undefined ? `<div class="tst-row"><span class="ln y tst-lbl">ADC              :</span><span class="ln y">${t.currency} ${t.exchangeAdc.toFixed(2)}</span></div>` : ''}
+      <div class="tst-row"><span class="ln d tst-lbl">GRAND TOTAL      :</span><span class="ln am" style="font-weight:bold">${t.currency} ${t.total.toFixed(2)}</span></div>
+      <div class="tst-row"><span class="ln d tst-lbl">FORM OF PAYMENT  :</span><span class="ln w">${pnr.fop||t.fop||'<span style="color:#ff4f4f">NOT ENTERED</span>'}</span></div>
+      ${pnr.validatingCarrier ? `<div class="tst-row"><span class="ln d tst-lbl">VALIDATING CARR  :</span><span class="ln w">${pnr.validatingCarrier}</span></div>` : ''}
+      ${pnr.endorsement ? `<div class="tst-row"><span class="ln d tst-lbl">ENDORSEMENT      :</span><span class="ln w">${pnr.endorsement}</span></div>` : ''}
+      <div class="tst-row"><span class="ln y tst-lbl">LAST TKT DTE     :</span><span class="ln y">${ttlStr}/23:59 LT IN POS</span></div>
+      <div class="tst-row"><span class="ln d tst-lbl">CREATED          :</span><span class="ln d">${t.createdAt}</span></div>
+    </div>`;
+  });
+
+  const grandTotal = pnr.tst.reduce((s, t) => s + t.total, 0);
+  const currency   = pnr.tst[0].currency;
+  html += `
+    <div class="ln d2" style="margin:8px 0;padding:4px 0;border-top:1px solid var(--border)">
+      <span class="ln d">ALL TSTs TOTAL: </span>
+      <span class="ln am" style="font-weight:bold">${currency} ${grandTotal.toFixed(2)}</span>
+      <span class="ln d">  (${pnr.tst.length} PAX)</span>
+    </div>
+    <div class="ln d" style="font-size:11px;margin-top:4px">ENTER FQN1 FOR FARE RULES  |  FQN1*PE FOR PENALTIES  |  TTP TO ISSUE</div>`;
+
+  panel.innerHTML = html;
+}
+
+/* ── TTP — Issue Ticket ─────────────────────────────────────────────── */
+async function cmdTtp(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (pnr.status === 'TICKETED' && !cmd.includes('/EXCH')) {
+    out('y', 'PNR ALREADY TICKETED — USE TTP/EXCH FOR EXCHANGE');
+    nl(); return;
+  }
+  if (!pnr.tst || !pnr.tst.length) {
+    out('y', 'NO TST ON FILE — RUN FXP BEFORE TTP');
+    nl(); return;
+  }
+  if (!pnr.fop && !pnr.tst[0]?.fop) {
+    out('y', 'FORM OF PAYMENT MISSING — ENTER FP CASH (or credit card)');
+    nl(); return;
+  }
+
+  const isExchange = cmd.includes('/EXCH');
+  const t1 = cmd.match(/\/T(\d+)/);
+
+  const issuedTsts = t1
+    ? [pnr.tst[parseInt(t1[1]) - 1]].filter(Boolean)
+    : pnr.tst;
+
+  // Assign e-ticket numbers
+  issuedTsts.forEach(t => {
+    if (!t.eticket) t.eticket = randomETicket();
+  });
+
+  pnr.status = isExchange ? 'EXCHANGED' : 'TICKETED';
+
+  try {
+    await fetch(`/api/pnr/${pnr.locator}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pnr)
+    });
+  } catch {}
+
+  if (isExchange) {
+    out('g', 'OK — ELECTRONIC TICKET ISSUED — EXCHANGE');
+    nl();
+    issuedTsts.forEach((t, i) => {
+      const px = pnr.passengers?.[t.paxNum - 1] || pnr.passengers?.[i];
+      out('w', `  ${px ? px.last + '/' + px.first + ' ' + px.title : t.paxName}`);
+      out('c', `  NEW ETICKET : ${t.eticket}`);
+      if (pnr._fhe) out('y', `  EXCHANGED FOR: ${pnr._fhe}`);
+      if (pnr._exchange) {
+        out('w', `  ADC COLLECTED: ${pnr._exchange.currency} ${pnr._exchange.adc.toFixed(2)}`);
+        out('w', `  PENALTY: ${pnr._exchange.currency} ${pnr._exchange.penalty.toFixed(2)}`);
+        out('w', `  FORM OF PAYMENT: ${pnr.fpo || pnr.fop || 'CASH'}`);
+      }
+    });
+    nl();
+    out('d', 'ENTRY ACCEPTED — ET COUPON STATUS UPDATED TO E ON ORIGINAL');
+    out('d', 'RETRIEVE PNR TO CONFIRM EXCHANGE STATUS');
+  } else {
+    out('g', 'OK — ELECTRONIC TICKET ISSUED');
+    nl();
+    issuedTsts.forEach((t, i) => {
+      const px = pnr.passengers?.[t.paxNum - 1] || pnr.passengers?.[i];
+      out('w', `  ${px ? px.last + '/' + px.first + ' ' + px.title : t.paxName}`);
+      out('c', `  ETICKET: ${t.eticket}`);
+    });
+    nl();
+    out('d', 'RETRIEVE PNR TO CONFIRM TICKET STATUS  |  TWD TO VIEW E-TICKET');
+  }
+  nl();
+  // Refresh TWD view after issuance
+  if (issuedTsts[0]) renderTwdView(issuedTsts[0]);
+}
+
+function randomETicket() {
+  const prefix = ['235','157','081','082','220','604','612','618'];
+  const p = prefix[Math.floor(Math.random() * prefix.length)];
+  return `${p}-${Math.floor(Math.random() * 9000000000 + 1000000000)}`;
+}
+
+/* ── TRFU — Refund ─────────────────────────────────────────────────── */
+async function cmdTrfu(cmd) {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  if (cmd.includes('/CONFIRM')) {
+    pnr.status = 'REFUNDED';
+    try { await fetch(`/api/pnr/${pnr.locator}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pnr) }); } catch {}
+    out('g', `OK — REFUND PROCESSED: ${pnr.locator}`);
+  } else {
+    out('w', `REFUND CALCULATION — ${pnr.locator}`);
+    out('w', 'PENALTY APPLIES — 25% CANCELLATION SURCHARGE');
+    out('d', 'TYPE TRFU/CONFIRM TO PROCESS REFUND');
+  }
+  nl();
+}
+
+/* ── XE — Delete Element by Line Number ─────────────────────────────── */
+function cmdXe(cmd) {
+  const n = parseInt(cmd.replace(/^XE/i, ''));
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+
+  // Rebuild element map exactly as printPnr does (el starts at 2)
+  let el = 2;
+  let deleted = false;
+
+  // Segments are el 2,3,4...
+  for (let i = 0; i < (pnr.itinerary?.length || 0); i++) {
+    if (el === n) {
+      const s = pnr.itinerary[i];
+      pnr.itinerary.splice(i, 1);
+      // Renumber remaining segments
+      pnr.itinerary.forEach((seg, idx) => seg.seg = idx + 1);
+      out('y', `ELEMENT ${n} DELETED — ${s.airline}${s.flight} ${s.from}${s.to} ${s.date||''}`);
+      deleted = true; break;
+    }
+    el++;
+  }
+
+  if (!deleted) {
+    // Contacts
+    for (let i = 0; i < (pnr.contacts?.length || 0); i++) {
+      if (el === n) {
+        const c = pnr.contacts.splice(i, 1)[0];
+        out('y', `ELEMENT ${n} DELETED — ${c.type} ${c.value}`);
+        deleted = true; break;
+      }
+      el++;
+    }
+  }
+
+  if (!deleted) {
+    // SSR
+    for (let i = 0; i < (pnr.ssr?.length || 0); i++) {
+      if (el === n) {
+        const s = pnr.ssr.splice(i, 1)[0];
+        out('y', `ELEMENT ${n} DELETED — SSR ${s.code}`);
+        deleted = true; break;
+      }
+      el++;
+    }
+  }
+
+  if (!deleted) {
+    // OSI
+    for (let i = 0; i < (pnr.osi?.length || 0); i++) {
+      if (el === n) {
+        const o = pnr.osi.splice(i, 1)[0];
+        out('y', `ELEMENT ${n} DELETED — OSI ${o.text}`);
+        deleted = true; break;
+      }
+      el++;
+    }
+  }
+
+  if (!deleted) {
+    // Remarks
+    for (let i = 0; i < (pnr.remarks?.length || 0); i++) {
+      if (el === n) {
+        const r = pnr.remarks.splice(i, 1)[0];
+        out('y', `ELEMENT ${n} DELETED — RM ${r.text}`);
+        deleted = true; break;
+      }
+      el++;
+    }
+  }
+
+  if (!deleted) {
+    out('r', `ELEMENT ${n} NOT FOUND — CHECK LINE NUMBER IN PNR`);
+    nl(); return;
+  }
+
+  nl();
+  // Redisplay updated PNR
+  printPnr(pnr, 'A');
+}
+
+/* ── XK — Cancel Segment Status ─────────────────────────────────────── */
+function cmdXk(cmd) {
+  const n = parseInt(cmd.replace(/^XK/i, '')) - 1;
+  if (!pnr?.itinerary?.[n]) { out('r', 'SEGMENT ' + (n+1) + ' NOT FOUND'); nl(); return; }
+  pnr.itinerary[n].status = 'XX';
+  mix([
+    { c: 'y', t: `${n + 1} ${pnr.itinerary[n].airline}${pnr.itinerary[n].flight} ${pnr.itinerary[n].from}${pnr.itinerary[n].to}` },
+    { c: 'r', t: ' — CANCELLED (XX)' }
+  ]);
+  nl();
+  printPnr(pnr, 'A');
+}
+
+/* ── XI — Cancel All ────────────────────────────────────────────────── */
+function cmdXi() {
+  if (!pnr) { out('y', 'NO ACTIVE BOOKING FILE'); nl(); return; }
+  pnr.itinerary?.forEach(s => s.status = 'XX');
+  out('y', 'ALL SEGMENTS CANCELLED');
+  nl();
+}
+
+/* ── DNA / DAC — Reference ──────────────────────────────────────────── */
+async function cmdDna(code) {
+  const list = await fetch('/api/airlines').then(r => r.json()).catch(() => []);
+  const al = list.find(a => a.code === code.toUpperCase());
+  if (!al) out('r', 'AIRLINE ' + code + ' — NOT FOUND IN DATABASE');
+  else {
+    out('w', al.code + '   ' + al.name);
+    out('d', 'ICAO: ' + (al.icao || 'N/A') + '  TYPE: SCHEDULED AIRLINE');
+  }
+  nl();
+}
+async function cmdDac(code) {
+  const list = await fetch('/api/cities').then(r => r.json()).catch(() => []);
+  const ct = list.find(c => c.code === code.toUpperCase());
+  if (!ct) out('r', 'CITY/AIRPORT ' + code + ' — NOT FOUND IN DATABASE');
+  else {
+    out('w', ct.code + '   ' + ct.name + '  /' + ct.country + '/');
+    out('d', 'IATA AIRPORT CODE: ' + ct.code);
+  }
+  nl();
+}
+
+/* ── LIST ────────────────────────────────────────────────────────────── */
+async function cmdList() {
+  let pnrs;
+  try { pnrs = await fetch('/api/pnrs').then(r => r.json()); }
+  catch (e) { out('r', 'SYSTEM ERROR: ' + e.message); nl(); return; }
+
+  out('w', '--- PNR LIST ---');
+  out('d', ' LOCATOR   STATUS      RECEIVED FROM                CREATED        TTL');
+  out('d', ' ────────  ──────────  ──────────────────────────   ───────────    ────────────────');
+
+  if (!pnrs.length) { out('d', ' NO RECORDS FOUND'); nl(); return; }
+  pnrs.forEach(p => {
+    const sc = p.status === 'TICKETED' ? 'g' : p.status === 'REFUNDED' ? 'r' : 'am';
+    mix([
+      { c: 'am', t: ' ' + rpad(p.locator || '------', 10) },
+      { c: sc,   t: rpad(p.status || 'OPEN', 12) },
+      { c: 'w',  t: rpad((p.rf || '-').slice(0, 26), 27) },
+      { c: 'd',  t: rpad(p.created || '-', 15) },
+      { c: 'd',  t: p.ttl || '-' }
+    ]);
+  });
+  out('d', `--- ${pnrs.length} RECORD(S) ---`);
+  nl();
+}
+
+/* ── DBSTATS ─────────────────────────────────────────────────────────── */
+async function cmdStats() {
+  let s;
+  try { s = await fetch('/api/stats').then(r => r.json()); }
+  catch (e) { out('r', 'SYSTEM ERROR: ' + e.message); nl(); return; }
+  out('w', '--- DATABASE STATISTICS ---');
+  ['flights','pnrs','airlines','cities','fares','log'].forEach(k =>
+    out('w', rpad(k.toUpperCase(), 12) + ': ' + s[k])
+  );
+  nl();
+}
+
+/* ── PNR Panel ───────────────────────────────────────────────────────── */
+async function loadPnrPanel() {
+  document.getElementById('pnrBody').innerHTML = '<tr><td colspan="7" style="color:#0d5050;padding:10px;">Loading...</td></tr>';
+  let pnrs;
+  try { pnrs = await fetch('/api/pnrs').then(r => r.json()); }
+  catch (e) {
+    document.getElementById('pnrBody').innerHTML = `<tr><td colspan="7" style="color:#ff4f4f">ERR: ${e.message}</td></tr>`;
+    return;
+  }
+  if (!pnrs.length) {
+    document.getElementById('pnrBody').innerHTML = '<tr><td colspan="7" style="color:#0d5050;padding:10px;">No PNRs in database</td></tr>';
+    return;
+  }
+
+  // Fetch full PNR data for name display
+  const rows = await Promise.all(pnrs.map(async p => {
+    try {
+      const full = await fetch(`/api/pnr/${p.locator}`).then(r => r.json());
+      const px   = full.passengers?.[0];
+      return { ...p, paxName: px ? `${px.last}/${px.first} ${px.title}` : '-' };
+    } catch { return { ...p, paxName: '-' }; }
+  }));
+
+  document.getElementById('pnrBody').innerHTML = rows.map(p => {
+    const sc = p.status === 'TICKETED' ? 'color:#4de64d' : p.status === 'REFUNDED' ? 'color:#ff4f4f' : 'color:#ffae42';
+    return `<tr onclick="rtFromTable('${p.locator}')">
+      <td style="color:#e8881a;font-weight:bold">${p.locator}</td>
+      <td style="${sc}">${p.status}</td>
+      <td>${p.paxName}</td>
+      <td style="color:#b0d8c8">${p.rf || '-'}</td>
+      <td style="color:#4a8a80">${p.created || '-'}</td>
+      <td style="color:#4a8a80">${p.ttl || '-'}</td>
+      <td style="color:#4a8a80">${p.office || '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function rtFromTable(loc) {
+  switchView('terminal');
+  dispatchText('RT ' + loc);
+}
+
+/* ── Utility ─────────────────────────────────────────────────────────── */
+function lpad(s, ch, n) {
+  if (typeof ch === 'number') { n = ch; ch = ' '; }
+  return String(s).padStart(n, ch);
+}
+</script>
+</body>
+</html>
